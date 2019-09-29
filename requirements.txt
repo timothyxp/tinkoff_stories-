@@ -1,0 +1,7 @@
+torch>=1.0.0
+pandas
+numpy
+torchvision
+scikit-learn
+pyspark
+lightgbm
