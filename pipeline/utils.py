@@ -72,7 +72,7 @@ def train_collaborative_model(config: ConfigBase):
     model_path = os.path.join(config.collaborative_model_dir, repr(model))
 
     logger.info("saving model")
-    with open(model_path, "rb") as f:
+    with open(model_path, "wb") as f:
         pickle.dumps(model, f)
 
 

@@ -13,7 +13,11 @@ class Config(ConfigBase):
 
         model = lambda : lightgbm.LGBMRegressor()
 
-        collaborative_model = lambda : ALS()
+        collaborative_model = lambda : ALS(
+            learning_rate=0.2,
+            n_factors=64,
+            n_ter=200
+        )
 
         super().__init__(
             experiment_name="base",
