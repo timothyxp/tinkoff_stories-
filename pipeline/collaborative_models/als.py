@@ -9,9 +9,10 @@ from scipy.sparse import coo_matrix
 
 
 class ALS:
-    def __init__(self, n_factors=32, n_ter=100):
+    def __init__(self, n_factors=32, n_ter=100, learning_rate=0.1):
         self.n_factors = n_factors
         self.n_iter = n_ter
+        self.lr = learning_rate
 
         self.user_mapper = None
         self.item_mapper = None

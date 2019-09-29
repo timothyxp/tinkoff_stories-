@@ -4,7 +4,7 @@ from typing import Dict, Tuple
 from scipy.sparse import coo_matrix
 
 
-def get_user_item_matrix(config: ConfigBase, item_column="story_id") -> Tuple[pd.DataFrame, Dict[int, int], Dict[int, int]]:
+def get_user_item_matrix(config: ConfigBase, item_column="story_id") -> Tuple[coo_matrix, Dict[int, int], Dict[int, int]]:
     reaction = pd.read_csv(config.stories_path)
 
     view2marks: Dict[str, float] = {
@@ -34,4 +34,4 @@ def get_user_item_matrix(config: ConfigBase, item_column="story_id") -> Tuple[pd
         (reaction["u_index"], reaction["i_index"])),
     )
 
-    return user_item_matrix[["u_index", "i_index", "result"]], user_mapper, item_mapper
+    return user_item_matrix, user_mapper, item_mapper
