@@ -22,9 +22,6 @@ class ALS:
     def fit(self, user_item_matrix):
         logger.info(f"have matrix with shape {user_item_matrix.shape}")
 
-        user_item_matrix = coo_matrix((user_item_matrix["result"],
-                                       (user_item_matrix["u_index"], user_item_matrix["i_index"])))
-
         if self.user_factors is None and self.item_factors is None:
             self.user_factors = nn.Parameter(torch.randn(user_item_matrix.shape[0], self.n_factors) / self.n_factors)
             self.item_factors = nn.Parameter(torch.randn(user_item_matrix.shape[1], self.n_factors) / self.n_factors)
