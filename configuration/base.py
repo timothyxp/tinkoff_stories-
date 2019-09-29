@@ -2,6 +2,7 @@ from pipeline.config_base import ConfigBase
 from pipeline.beautifier.beautifier import DataBeautifier
 from pipeline.feature_extractors.base import FeatureExtractorCombiner
 import lightgbm
+from pipeline.collaborative_models.als import ALS
 
 
 class Config(ConfigBase):
@@ -12,9 +13,12 @@ class Config(ConfigBase):
 
         model = lambda : lightgbm.LGBMRegressor()
 
+        collaborative_model = lambda : ALS()
+
         super().__init__(
             experiment_name="base",
             data_beautifier=data_beautifier,
             feature_extractor=feature_extractor,
-            model=model
+            model=model,
+            collaborative_model=collaborative_model
         )
