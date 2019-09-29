@@ -8,10 +8,10 @@ def get_user_item_matrix(config: ConfigBase, item_column="story_id") -> Tuple[co
     reaction = pd.read_csv(config.stories_path)
 
     view2marks: Dict[str, float] = {
-        "dislike": 1.,
-        "skip": 2.,
-        "view": 4.,
-        "like": 5.
+        "dislike": 0.2,
+        "skip": 0.4,
+        "view": 0.8,
+        "like": 1.
     }
 
     reaction["result"] = [view2marks[event] for event in reaction["event"]]

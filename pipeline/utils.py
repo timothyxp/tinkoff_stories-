@@ -69,7 +69,7 @@ def train_collaborative_model(config: ConfigBase):
     logger.info("start fitting model")
     model.fit(user_item_matrix)
 
-    model_path = os.path.join(config.collaborative_model_dir, repr(model))
+    model_path = os.path.join(config.collaborative_model_dir, repr(model), ".pkl")
 
     logger.info("saving model")
     with open(model_path, "wb") as f:
