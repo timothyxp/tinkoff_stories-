@@ -69,9 +69,9 @@ def train_collaborative_model(config: ConfigBase):
     logger.info("start fitting model")
     model.fit(user_item_matrix)
 
-    model_path = os.path.join(config.collaborative_model_dir, repr(model), ".pkl")
+    model_path = os.path.join(config.collaborative_model_dir, f"{repr(model)}.pkl")
 
-    logger.info("saving model")
+    logger.info(f"saving model to {model_path}")
     with open(model_path, "wb") as f:
         pickle.dumps(model, f)
 
