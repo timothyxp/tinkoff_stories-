@@ -1,6 +1,8 @@
 import os
 from . import DATA_PATH
 from pipeline.feature_extractors.base import FeatureExtractorBase
+from pipeline.collaborative_models.als import ALS
+from typing import Callable
 
 
 class ConfigBase:
@@ -13,6 +15,7 @@ class ConfigBase:
             transactions_path: str = None,
             data_beautifier = None, #TODO for loading data, descriptions, images and other refs ans parse data
             feature_extractor: FeatureExtractorBase = None, #TODO generate feature, at first simple features
+            collaborative_model: Callable[[], ALS] = None,
             model=None
     ):
         self.experiment_name = experiment_name
@@ -26,6 +29,7 @@ class ConfigBase:
 
         os.makedirs(self.data_path, exist_ok=True)
         os.makedirs(self.models_path, exist_ok=True)
+        os.makedirs(self.collaborative_model_dir, exist_ok=True)
 
         if customer_path is None:
             customer_path = "customer_train.csv"
@@ -48,9 +52,15 @@ class ConfigBase:
 
         self.model = model
 
+        self.collaborative_model = collaborative_model
+
     @property
     def train_data_path(self):
         return f"{self.data_path}/train_data.csv"
+
+    @property
+    def collaborative_model_dir(self):
+        return f"{self.models_path}/cf_models"
 
 
 class PredictConfigBase:

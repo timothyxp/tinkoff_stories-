@@ -2,6 +2,7 @@ import importlib
 from .config_base import ConfigBase
 from pipeline.spark.common import read_csv, write_csv
 from pipeline.logging.logger import logger
+from pipeline.collaborative_models.build_matrix import get_user_item_matrix
 import os
 import pandas as pd
 import pickle
@@ -53,6 +54,25 @@ def run_train_model(config: ConfigBase):
     main_model_path = os.path.join(config.models_path, "main_model.pkl")
     logger.info(f"saving model to {main_model_path}")
     with open(main_model_path, "rb") as f:
+        pickle.dump(model, f)
+
+
+def train_collaborative_model(config: ConfigBase):
+    model = config.collaborative_model()
+
+    logger.info("get user item matrix")
+    user_item_matrix, user_mapper, item_mapper = get_user_item_matrix(config)
+
+    model.user_mapper = user_mapper
+    model.item_mapper = item_mapper
+
+    logger.info("start fitting model")
+    model.fit(user_item_matrix)
+
+    model_path = os.path.join(config.collaborative_model_dir, f"{repr(model)}.pkl")
+
+    logger.info(f"saving model to {model_path}")
+    with open(model_path, "wb") as f:
         pickle.dump(model, f)
 
 
