@@ -29,7 +29,7 @@ class ConfigBase:
 
         os.makedirs(self.data_path, exist_ok=True)
         os.makedirs(self.models_path, exist_ok=True)
-        os.makedirs(self.collaborative_model_dir)
+        os.makedirs(self.collaborative_model_dir, exist_ok=True)
 
         if customer_path is None:
             customer_path = "customer_train.csv"

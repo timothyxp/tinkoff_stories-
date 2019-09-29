@@ -73,7 +73,7 @@ def train_collaborative_model(config: ConfigBase):
 
     logger.info(f"saving model to {model_path}")
     with open(model_path, "wb") as f:
-        pickle.dumps(model, f)
+        pickle.dump(model, f)
 
 
 def run_predict(config):
