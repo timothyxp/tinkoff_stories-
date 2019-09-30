@@ -1,6 +1,7 @@
 from pipeline.config_base import ConfigBase
 from pipeline.beautifier.beautifier import DataBeautifier
 from pipeline.feature_extractors.base import FeatureExtractorCombiner
+from pipeline.feature_extractors.als import FeatureExtractorALS
 import lightgbm
 from pipeline.collaborative_models.als import ALS
 
@@ -9,7 +10,9 @@ class Config(ConfigBase):
     def __init__(self):
         data_beautifier = DataBeautifier(self)
 
-        feature_extractor = FeatureExtractorCombiner([])
+        feature_extractor = FeatureExtractorCombiner([
+            FeatureExtractorALS(self)
+        ])
 
         model = lambda : lightgbm.LGBMRegressor()
 

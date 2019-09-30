@@ -63,5 +63,15 @@ class ALS:
         logger.info("Optimization finished, Loss {}, Time {}".format(
             loss.cpu().data.numpy(), time.time() - start_time))
 
+    def predict(self, customer_id, story_id):
+        u_index = self.user_mapper.get(customer_id, None)
+        i_index = self.item_mapper.get(story_id, None)
+
+        if u_index is None or i_index is None:
+            return None
+
+        return float(torch.dot(self.user_factors[u_index], self.item_factors[i_index]))
+
+
     def __repr__(self):
         return self.__class__.__name__
