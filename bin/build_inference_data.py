@@ -1,4 +1,4 @@
-from pipeline.utils import load_config, run_train
+from pipeline.utils import load_config, run_predict
 
 import argparse
 
@@ -9,7 +9,7 @@ def main():
     args = parser.parse_args()
 
     config = load_config(args.config_path)
-    run_train(config)
+    run_predict(config)
 
 
 if __name__ == "__main__":

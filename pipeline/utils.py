@@ -30,9 +30,9 @@ def load_predict_config(config_path: str):
 
 def run_train(config: ConfigBase):
     logger.info("reading tables")
-    transactions = read_csv(config.transactions_path)
-    stories = read_csv(config.stories_path)
-    users = read_csv(config.customer_path)
+    transactions = pd.read_csv(config.transactions_path)
+    stories = pd.read_csv(config.stories_path)
+    users = pd.read_csv(config.customer_path)
 
     feature_extractor = config.feature_extractor
 
@@ -40,7 +40,7 @@ def run_train(config: ConfigBase):
     features = feature_extractor.extract(transactions, stories, users)
 
     logger.info("saving data")
-    write_csv(features, config.train_data_path)
+    features.to_csv(config.train_data_path, index=False)
 
 
 def run_train_model(config: ConfigBase):
@@ -77,4 +77,15 @@ def train_collaborative_model(config: ConfigBase):
 
 
 def run_predict(config):
-    pass
+    logger.info("reading tables")
+    transactions = pd.read_csv(config.transactions_path)
+    stories = pd.read_csv(config.stories_inference_path)
+    users = pd.read_csv(config.customer_inference_path)
+
+    feature_extractor = config.feature_extractor
+
+    logger.info("start extract features")
+    features = feature_extractor.extract(transactions, stories, users)
+
+    logger.info("saving data")
+    features.to_csv(config.inference_data, index=False)
