@@ -27,7 +27,7 @@ class FeatureExtractorCombiner(FeatureExtractorBase):
 
         candidates_columns_len = len(stories.columns)
 
-        result = stories.copy()
+        result = stories[["customer_id", "story_id", "answer_id"]].copy()
 
         merge_columns = ["customer_id", "story_id"]
 
@@ -42,9 +42,13 @@ class FeatureExtractorCombiner(FeatureExtractorBase):
             if features_count == 0:
                 logger.warning(f"{repr(feature_extractor)} doesnt return features")
 
+            logger.debug(f"shape before merge {result.shape}")
             result = result.merge(features, on=merge_columns, how="left")
+            logger.debug(f"shape after merge {result.shape}")
 
-        return result
+        return result.drop_duplicates(
+            subset=["customer_id", "story_id"]
+        )
 
     def __repr__(self):
         reprs = [repr(feature_extractor) for feature_extractor in self._feature_extractors]

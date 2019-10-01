@@ -1,4 +1,4 @@
-from pipeline.utils import load_predict_config, run_predict
+from pipeline.utils import load_config, run_predict
 
 import argparse
 
@@ -8,7 +8,7 @@ def main():
     parser.add_argument("config_path")
     args = parser.parse_args()
 
-    config = load_predict_config(args.config_path)
+    config = load_config(args.config_path)
     run_predict(config)
 
 

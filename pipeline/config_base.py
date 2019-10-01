@@ -62,6 +62,9 @@ class ConfigBase:
 
         self.collaborative_model = collaborative_model
 
+    @property
+    def submit_data_path(self):
+        return f"{self.data_path}/submit_result.csv"
 
     @property
     def inference_data(self):

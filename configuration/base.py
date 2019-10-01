@@ -14,7 +14,17 @@ class Config(ConfigBase):
             FeatureExtractorALS(self)
         ])
 
-        model = lambda : lightgbm.LGBMRegressor()
+        model = lambda : lightgbm.LGBMClassifier(
+            class_weight={
+                0: 10,
+                1: 100,
+                2: 100,
+                3: 20
+            },
+            learning_rate=0.1,
+            num_leaves=31,
+            n_estimators=100
+        )
 
         collaborative_model = lambda : ALS()
 
