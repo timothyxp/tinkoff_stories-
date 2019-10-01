@@ -3,7 +3,7 @@ import pandas as pd
 from .base import FeatureExtractorBase
 
 
-class FeatureExtractorCustomerAge(FeatureExtractorBase):
+class FeatureExtractorCustomerGender(FeatureExtractorBase):
     def __init__(self, config):
         self.config = config
 
