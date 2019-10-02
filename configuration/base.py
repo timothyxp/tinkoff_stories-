@@ -24,10 +24,10 @@ class Config(ConfigBase):
 
         model = lambda : lightgbm.LGBMClassifier(
             class_weight={
-                0: 1,
+                0: 0.85,
                 1: 0.1,
-                2: 0.1,
-                3: 0.5
+                2: 0.13,
+                3: 0.65
             },
             learning_rate=0.1,
             num_leaves=31,
@@ -38,7 +38,7 @@ class Config(ConfigBase):
 
         score_mapper = {
             0: -1,
-            1: -0.9,
+            1: -1,
             2: 1,
             3: 1,
         }
