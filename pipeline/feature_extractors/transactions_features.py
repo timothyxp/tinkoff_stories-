@@ -48,7 +48,11 @@ class FeatureExtractorAvgTransactionAmtByMonth(FeatureExtractorBase):
             user_transactions = user_transactions.merge(transactions_mean_bill_month, on=['customer_id'], how='left')
         user_transactions = user_transactions.fillna(0)
         user_transactions = user_transactions.drop(['transaction_amt'], axis=1)
-        return user_transactions
+
+        result = candidates.merge(
+            user_transactions, on="customer_id", how="left"
+        )
+        return result
 
 
 class FeatureExtractorAvgMerchantUnique(FeatureExtractorBase):
@@ -68,7 +72,10 @@ class FeatureExtractorAvgMerchantUnique(FeatureExtractorBase):
 
         user_transactions = user_transactions.merge(user_transactions_count_unique_id, on=['customer_id'], how='left')
         user_transactions = user_transactions.merge(user_transactions_count_unique_mcc, on=['customer_id'], how='left')
-        return user_transactions[['customer_id', 'merchant_id_unique', 'merchant_mcc_unique']]
+        result = candidates.merge(
+            user_transactions[['customer_id', 'merchant_id_unique', 'merchant_mcc_unique']], on='customer_id', how="left")
+
+        return result
 
 
 class FeatureExtractorAvgMeanTransactionAmtOnMerchant(FeatureExtractorBase):
@@ -85,7 +92,9 @@ class FeatureExtractorAvgMeanTransactionAmtOnMerchant(FeatureExtractorBase):
         user_transactions = user_transactions.merge(transactions_merchant_mean_customer_id, on=['customer_id'],
                                                     how='left')
 
-        return user_transactions[['customer_id', 'transaction_amt_by_merchant']]
+        result = candidates \
+            .merge(user_transactions[['customer_id', 'transaction_amt_by_merchant']], on="customer_id", how="left")
+        return result
 
 
 
