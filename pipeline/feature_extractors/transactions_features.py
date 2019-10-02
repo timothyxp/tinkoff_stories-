@@ -46,6 +46,7 @@ class FeatureExtractorAvgTransactionAmtByMonth(FeatureExtractorBase):
             transactions_mean_bill_month = transactions_mean_bill_month.rename(
                 columns={'transaction_amt': 'transaction_amt_mean_month_' + str(i)})
             user_transactions = user_transactions.merge(transactions_mean_bill_month, on=['customer_id'], how='left')
+        user_transactions = user_transactions.fillna(0)
         user_transactions = user_transactions.drop(['transaction_amt'], axis=1)
         return user_transactions
 
@@ -67,8 +68,7 @@ class FeatureExtractorAvgMerchantUnique(FeatureExtractorBase):
 
         user_transactions = user_transactions.merge(user_transactions_count_unique_id, on=['customer_id'], how='left')
         user_transactions = user_transactions.merge(user_transactions_count_unique_mcc, on=['customer_id'], how='left')
-        user_transactions = user_transactions.drop(['merchant_id', 'merchant_mcc'], axis=1)
-        return user_transactions
+        return user_transactions[['customer_id', 'merchant_id_unique', 'merchant_mcc_unique']]
 
 
 class FeatureExtractorAvgMeanTransactionAmtOnMerchant(FeatureExtractorBase):
