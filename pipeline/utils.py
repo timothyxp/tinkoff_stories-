@@ -99,7 +99,7 @@ def build_inference_data(config):
     logger.info("reading tables")
     transactions = pd.read_csv(config.transactions_path)
     stories = pd.read_csv(config.stories_inference_path)
-    users = pd.read_csv(config.customer_path)
+    users = pd.read_csv(config.customer_inference_path)
 
     candidates = pd.read_csv(config.stories_inference_path)
 
