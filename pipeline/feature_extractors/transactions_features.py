@@ -64,7 +64,7 @@ class FeatureExtractorAvgMerchantUnique(FeatureExtractorBase):
             ['customer_id'])['merchant_mcc'].nunique().reset_index()
 
         user_transactions_count_unique_mcc = user_transactions_count_unique_mcc.rename(
-            columns={'merchant_id': 'merchant_mcc_unique'})
+            columns={'merchant_mcc': 'merchant_mcc_unique'})
 
         user_transactions = user_transactions.merge(user_transactions_count_unique_id, on=['customer_id'], how='left')
         user_transactions = user_transactions.merge(user_transactions_count_unique_mcc, on=['customer_id'], how='left')
