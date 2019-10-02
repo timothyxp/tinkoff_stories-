@@ -16,10 +16,10 @@ class Config(ConfigBase):
 
         model = lambda : lightgbm.LGBMClassifier(
             class_weight={
-                0: 10,
-                1: 100,
-                2: 100,
-                3: 20
+                0: 1,
+                1: 0.1,
+                2: 0.1,
+                3: 0.5
             },
             learning_rate=0.1,
             num_leaves=31,

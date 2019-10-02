@@ -27,7 +27,12 @@ class FeatureExtractorCombiner(FeatureExtractorBase):
 
         candidates_columns_len = len(stories.columns)
 
-        result = stories[["customer_id", "story_id", "answer_id"]].copy()
+        copy_columns = ["customer_id", "story_id"]
+
+        if "answer_id" in stories.columns:
+            copy_columns.append("answer_id")
+
+        result = stories[copy_columns].copy()
 
         merge_columns = ["customer_id", "story_id"]
 
