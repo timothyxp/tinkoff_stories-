@@ -28,10 +28,18 @@ class Config(ConfigBase):
 
         collaborative_model = lambda : ALS()
 
+        score_mapper = {
+            0: -1,
+            1: -0.9,
+            2: 1,
+            3: 1,
+        }
+
         super().__init__(
             experiment_name="base",
             data_beautifier=data_beautifier,
             feature_extractor=feature_extractor,
             model=model,
-            collaborative_model=collaborative_model
+            collaborative_model=collaborative_model,
+            score_mapper=score_mapper
         )

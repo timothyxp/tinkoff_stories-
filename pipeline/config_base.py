@@ -2,7 +2,7 @@ import os
 from . import DATA_PATH
 from pipeline.feature_extractors.base import FeatureExtractorBase
 from pipeline.collaborative_models.als import ALS
-from typing import Callable
+from typing import Callable, Dict
 
 
 class ConfigBase:
@@ -16,7 +16,8 @@ class ConfigBase:
             data_beautifier = None, #TODO for loading data, descriptions, images and other refs ans parse data
             feature_extractor: FeatureExtractorBase = None, #TODO generate feature, at first simple features
             collaborative_model: Callable[[], ALS] = None,
-            model=None
+            model=None,
+            score_mapper: Dict[int, float] = None
     ):
         self.experiment_name = experiment_name
 
@@ -61,6 +62,8 @@ class ConfigBase:
         self.model = model
 
         self.collaborative_model = collaborative_model
+
+        self.score_mapper = score_mapper
 
     @property
     def submit_data_path(self):

@@ -131,12 +131,7 @@ def run_predict(config: ConfigBase):
     logger.info(f"prediction len = {len(prediction)}")
     logger.info(f"predictions counts: {Counter(prediction).most_common(4)}")
 
-    score_mapper = {
-        0: -1,
-        1: -1,
-        2: 1,
-        3: 1,
-    }
+    score_mapper = config.score_mapper
 
     prediction = [score_mapper[score] for score in prediction]
 
