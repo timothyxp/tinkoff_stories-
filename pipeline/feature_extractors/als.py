@@ -10,7 +10,7 @@ class FeatureExtractorALS(FeatureExtractorBase):
     def __init__(self, config):
         self.config = config
 
-    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         cf_model = self.config.collaborative_model()
 
         model_path = os.path.join(self.config.collaborative_model_dir, f"{repr(cf_model)}.pkl")
@@ -19,7 +19,7 @@ class FeatureExtractorALS(FeatureExtractorBase):
         with open(model_path, "rb") as f:
             cf_model = pickle.load(f)
 
-        user_story = zip(stories["customer_id"], stories["story_id"])
-        stories[repr(cf_model)] = [cf_model.predict(story[0], story[1]) for story in user_story]
+        user_story = zip(candidates["customer_id"], candidates["story_id"])
+        candidates[repr(cf_model)] = [cf_model.predict(story[0], story[1]) for story in user_story]
         
-        return stories[["customer_id", "story_id", repr(cf_model)]]
+        return candidates

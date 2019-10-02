@@ -35,10 +35,12 @@ def run_train(config: ConfigBase):
     stories = pd.read_csv(config.stories_path)
     users = pd.read_csv(config.customer_path)
 
+    candidates = stories[["customer_id", "story_id", "event_dttm", "event"]]
+
     feature_extractor = config.feature_extractor
 
     logger.info("start extract features")
-    features = feature_extractor.extract(transactions, stories, users)
+    features = feature_extractor.extract(transactions, stories, users, candidates)
 
     logger.info("saving data")
     features.to_csv(config.train_data_path, index=False)
@@ -97,12 +99,14 @@ def build_inference_data(config):
     logger.info("reading tables")
     transactions = pd.read_csv(config.transactions_path)
     stories = pd.read_csv(config.stories_inference_path)
-    users = pd.read_csv(config.customer_inference_path)
+    users = pd.read_csv(config.customer_path)
+
+    candidates = pd.read_csv(config.stories_inference_path)
 
     feature_extractor = config.feature_extractor
 
     logger.info("start extract features")
-    features = feature_extractor.extract(transactions, stories, users)
+    features = feature_extractor.extract(transactions, stories, users, candidates)
 
     logger.info("saving data")
     features.to_csv(config.inference_data, index=False)
@@ -117,7 +121,7 @@ def run_predict(config: ConfigBase):
     stories = inference_data["story_id"]
     answer_ids = inference_data["answer_id"]
 
-    inference_data.drop(columns=["customer_id", "story_id", "answer_id"], inplace=True)
+    inference_data.drop(columns=["customer_id", "story_id", "event_dttm", "answer_id"], inplace=True)
 
     main_model_path = os.path.join(config.models_path, "main_model.pkl")
 

@@ -6,7 +6,7 @@ from typing import List
 
 class FeatureExtractorBase(abc.ABC):
     @abc.abstractmethod
-    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         pass
 
     def __repr__(self):
@@ -22,24 +22,23 @@ class FeatureExtractorCombiner(FeatureExtractorBase):
         self._feature_extractors = feature_extractors
 
 
-    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         logger.info("start extract features from combiner")
 
-        candidates_columns_len = len(stories.columns)
+        result = candidates.copy(deep=True)
+        logger.debug(f"candidates columns {candidates.columns}")
 
-        copy_columns = ["customer_id", "story_id"]
+        merge_columns = ["customer_id", "story_id", "event_dttm"]
 
-        if "answer_id" in stories.columns:
-            copy_columns.append("answer_id")
+        candidates_columns_len = len(merge_columns)
 
-        result = stories[copy_columns].copy()
-
-        merge_columns = ["customer_id", "story_id"]
+        candidates = candidates[merge_columns]
 
         for feature_extractor in self._feature_extractors:
             logger.info(f"start extract from {repr(feature_extractor)}")
 
-            features = feature_extractor.extract(transactions, stories, users)
+            features = feature_extractor.extract(transactions.copy(), stories.copy(), users.copy(), candidates.copy())
+            features = features.drop_duplicates(subset=merge_columns)
             features_count = len(features.columns) - candidates_columns_len
 
             logger.debug(f"get {features_count} features")
