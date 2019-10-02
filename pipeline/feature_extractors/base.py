@@ -37,6 +37,7 @@ class FeatureExtractorCombiner(FeatureExtractorBase):
         merge_columns = ["customer_id", "story_id"]
 
         for feature_extractor in self._feature_extractors:
+            logger.info(f"start extract from {repr(feature_extractor)}")
 
             features = feature_extractor.extract(transactions, stories, users)
             features_count = len(features.columns) - candidates_columns_len

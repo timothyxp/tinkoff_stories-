@@ -4,9 +4,6 @@ from .base import FeatureExtractorBase
 
 
 class FeatureExtractorCustomerChildrenAmount(FeatureExtractorBase):
-    def __init__(self, config):
-        self.config = config
-
     def extract(self,  transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
         children_amount = users[['children_cnt', 'customer_id']]
         children_amount = children_amount.rename(columns={'children_cnt': 'customer_children_cnt'})

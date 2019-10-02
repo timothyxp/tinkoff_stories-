@@ -4,9 +4,6 @@ from .base import FeatureExtractorBase
 
 
 class FeatureExtractorCustomerGender(FeatureExtractorBase):
-    def __init__(self, config):
-        self.config = config
-
     def extract(self,  transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame) -> pd.DataFrame:
         gender = users[['gender_rk', 'customer_id']]
         gender = gender.rename(columns={'gender_cd': 'customer_gender'})

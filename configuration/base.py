@@ -2,6 +2,10 @@ from pipeline.config_base import ConfigBase
 from pipeline.beautifier.beautifier import DataBeautifier
 from pipeline.feature_extractors.base import FeatureExtractorCombiner
 from pipeline.feature_extractors.als import FeatureExtractorALS
+from pipeline.feature_extractors.age_features import FeatureExtractorCustomerAge
+from pipeline.feature_extractors.gender_features import FeatureExtractorCustomerGender
+from pipeline.feature_extractors.childer_features import FeatureExtractorCustomerChildrenAmount
+from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory
 import lightgbm
 from pipeline.collaborative_models.als import ALS
 
@@ -11,7 +15,11 @@ class Config(ConfigBase):
         data_beautifier = DataBeautifier(self)
 
         feature_extractor = FeatureExtractorCombiner([
-            FeatureExtractorALS(self)
+            FeatureExtractorALS(self),
+            FeatureExtractorCustomerChildrenAmount(),
+            FeatureExtractorCustomerJobCategory(),
+            FeatureExtractorCustomerGender(),
+            FeatureExtractorCustomerAge()
         ])
 
         model = lambda : lightgbm.LGBMClassifier(
