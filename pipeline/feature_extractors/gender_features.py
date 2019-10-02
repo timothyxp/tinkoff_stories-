@@ -8,5 +8,6 @@ class FeatureExtractorCustomerGender(FeatureExtractorBase):
         gender = users[['gender_cd', 'customer_id']]
         gender = gender.rename(columns={'gender_cd': 'customer_gender'})
         gender['customer_gender'] = [0 if gen == 'M' else 1 for gen in gender['customer_gender']]
+        gender['customer_gender'] = gender['customer_gender'].astype('category')
         candidates = candidates.merge(gender, on='customer_id', how='left')
         return candidates

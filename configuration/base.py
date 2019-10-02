@@ -6,6 +6,9 @@ from pipeline.feature_extractors.age_features import FeatureExtractorCustomerAge
 from pipeline.feature_extractors.gender_features import FeatureExtractorCustomerGender
 from pipeline.feature_extractors.childer_features import FeatureExtractorCustomerChildrenAmount
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory
+from pipeline.feature_extractors.transactions_features import FeatureExtractorAvgTransactionAmt, \
+    FeatureExtractorCustomerSumTransactionAmt, FeatureExtractorMinMaxTransactionAmt
+
 import lightgbm
 from pipeline.collaborative_models.als import ALS
 
@@ -19,7 +22,10 @@ class Config(ConfigBase):
             FeatureExtractorCustomerChildrenAmount(),
             FeatureExtractorCustomerJobCategory(),
             FeatureExtractorCustomerGender(),
-            FeatureExtractorCustomerAge()
+            FeatureExtractorCustomerAge(),
+            FeatureExtractorMinMaxTransactionAmt(),
+            FeatureExtractorCustomerSumTransactionAmt(),
+            FeatureExtractorAvgTransactionAmt()
         ])
 
         model = lambda : lightgbm.LGBMClassifier(
