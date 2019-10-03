@@ -66,6 +66,10 @@ class ConfigBase:
         self.score_mapper = score_mapper
 
     @property
+    def stories_descriptions_parsed(self):
+        return f"{self.data_path}/stories_descriptions_parsed.csv"
+
+    @property
     def submit_data_path(self):
         return f"{self.data_path}/submit_result.csv"
 
