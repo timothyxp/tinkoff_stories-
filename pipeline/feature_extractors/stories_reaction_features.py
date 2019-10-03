@@ -10,6 +10,8 @@ class FeatureExtractorMeanLikeValueForCustomer(FeatureExtractorBase):
         stories_event_int = stories.copy()
         stories_event_int['event'] = stories_event_int['event'].map(ans_to_int)
         stories_event_int = stories_event_int.groupby('customer_id').event.agg(['sum', 'mean']).reset_index()
+        stories_event_int = stories_event_int.rename(coluns={'sum' : 'customer_sum_of_like_value',
+                                                             'mean': 'customer_mean_of_like_value'})
         return candidates.merge(stories_event_int, how='left', on='customer_id')
 
 
@@ -19,4 +21,6 @@ class FeatureExtractorMeanLikeValueForStory(FeatureExtractorBase):
         stories_event_int = stories.copy()
         stories_event_int['event'] = stories_event_int['event'].map(ans_to_int)
         stories_event_int = stories_event_int.groupby('story_id').event.agg(['sum', 'mean']).reset_index()
+        stories_event_int = stories_event_int.rename(coluns={'sum': 'story_sum_of_like_value',
+                                                             'mean': 'story_mean_of_like_value'})
         return candidates.merge(stories_event_int, how='left', on='story_id')
