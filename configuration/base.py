@@ -15,6 +15,7 @@ from pipeline.feature_extractors.time_features import FeatureExtractorDayCategor
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
     FeatureExtractorCustomerJobPositionClassify, FeatureExtractorCustomerJobTitleTransactionMean
+from pipeline.feature_extractors.descriptions import FeatureExtractorStaticDescriptions
 import lightgbm
 from pipeline.collaborative_models.als import ALS
 
@@ -42,7 +43,8 @@ class Config(ConfigBase):
             FeatureExtractorMeanLikeValueForCustomer(),
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
-            FeatureExtractorCustomerJobTitleTransactionMean()
+            FeatureExtractorCustomerJobTitleTransactionMean(),
+            FeatureExtractorStaticDescriptions(self)
         ])
 
         model = lambda : lightgbm.LGBMClassifier(
