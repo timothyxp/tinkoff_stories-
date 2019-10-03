@@ -18,6 +18,6 @@ class FeatureExtractorDayCategory(FeatureExtractorBase):
         candidates['event_datetime'] = [datetime.strptime(x, '%Y-%m-%d %H:%M:%S') for x in candidates.event_dttm]
         candidates['week_day'] = [x.weekday() for x in candidates.event_datetime]
         candidates.drop(columns=['event_datetime'], inplace=True)
-        candidates.event_datetime = candidates.event_datetime.astype('category')
+        candidates.week_day = candidates.week_day.astype('category')
         return candidates
 
