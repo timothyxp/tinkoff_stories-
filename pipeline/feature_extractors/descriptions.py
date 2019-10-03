@@ -4,7 +4,7 @@ from pipeline.config_base import ConfigBase
 
 
 class FeatureExtractorStaticDescriptions(FeatureExtractorBase):
-    def __int__(self, config: ConfigBase):
+    def __init__(self, config: ConfigBase):
         self.config = config
 
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
