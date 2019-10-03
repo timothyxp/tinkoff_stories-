@@ -46,14 +46,14 @@ class Config(ConfigBase):
 
         model = lambda : lightgbm.LGBMClassifier(
             class_weight={
-                0: 0.85,
+                0: 0.1,
                 1: 0.1,
-                2: 0.13,
-                3: 0.65
+                2: 0.1,
+                3: 0.1
             },
             learning_rate=0.1,
             num_leaves=31,
-            n_estimators=100
+            n_estimators=300
         )
 
         collaborative_model = lambda : ALS()
