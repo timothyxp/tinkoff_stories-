@@ -79,21 +79,27 @@ class FeatureExtractorAvgMerchantUnique(FeatureExtractorBase):
 
 
 class FeatureExtractorAvgMeanTransactionAmtOnMerchant(FeatureExtractorBase):
+    def __init__(self, calc_column = "merchant_id"):
+        self.calc_column = calc_column
+
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
-        transactions_merchant = transactions.groupby(['merchant_id'])['transaction_amt'].mean().reset_index()
-        transactions_merchant = transactions_merchant.rename(columns={'transaction_amt': 'transaction_amt_by_merchant'})
+        transactions_merchant = transactions.groupby([self.calc_column])['transaction_amt'].mean().reset_index()
+        transactions_merchant = transactions_merchant.rename(
+            columns={'transaction_amt': f"transaction_amt_by_{self.calc_column}"})
+
         transactions_merchant_mean = transactions.copy()
-        transactions_merchant_mean = transactions_merchant_mean.merge(transactions_merchant, on=['merchant_id'],
+        transactions_merchant_mean = transactions_merchant_mean.merge(transactions_merchant, on=[self.calc_column],
                                                                       how='left')
         transactions_merchant_mean_customer_id = transactions_merchant_mean.groupby(['customer_id'])[
-            'transaction_amt_by_merchant'].mean().reset_index()
+            f"transaction_amt_by_{self.calc_column}"].mean().reset_index()
 
         user_transactions = transactions.copy()
         user_transactions = user_transactions.merge(transactions_merchant_mean_customer_id, on=['customer_id'],
                                                     how='left')
 
         result = candidates \
-            .merge(user_transactions[['customer_id', 'transaction_amt_by_merchant']], on="customer_id", how="left")
+            .merge(user_transactions[['customer_id', f"transaction_amt_by_{self.calc_column}"]],
+                   on="customer_id", how="left")
         return result
 
 
