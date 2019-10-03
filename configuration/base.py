@@ -10,6 +10,9 @@ from pipeline.feature_extractors.transactions_features import FeatureExtractorAv
     FeatureExtractorCustomerSumTransactionAmt, FeatureExtractorMinMaxTransactionAmt, \
     FeatureExtractorAvgMeanTransactionAmtOnMerchant, FeatureExtractorAvgMerchantUnique, \
     FeatureExtractorAvgTransactionAmtByMonth
+from pipeline.feature_extractors.stories_reaction_features import FeatureExtractorMeanLikeValueForCustomer,  \
+    FeatureExtractorMeanLikeValueForStory
+from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory
 
 import lightgbm
 from pipeline.collaborative_models.als import ALS
@@ -30,7 +33,11 @@ class Config(ConfigBase):
             FeatureExtractorAvgTransactionAmt(),
             FeatureExtractorAvgMeanTransactionAmtOnMerchant(),
             FeatureExtractorAvgMerchantUnique(),
-            FeatureExtractorAvgTransactionAmtByMonth()
+            FeatureExtractorAvgTransactionAmtByMonth(),
+            FeatureExtractorHourCategory(),
+            FeatureExtractorDayCategory(),
+            FeatureExtractorMeanLikeValueForStory(),
+            FeatureExtractorMeanLikeValueForCustomer()
         ])
 
         model = lambda : lightgbm.LGBMClassifier(

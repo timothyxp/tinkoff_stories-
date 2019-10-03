@@ -20,5 +20,3 @@ class FeatureExtractorMeanLikeValueForStory(FeatureExtractorBase):
         stories_event_int['event'] = stories_event_int['event'].map(ans_to_int)
         stories_event_int = stories_event_int.groupby('story_id').event.agg(['sum', 'mean']).reset_index()
         return candidates.merge(stories_event_int, how='left', on='story_id')
-
-    
