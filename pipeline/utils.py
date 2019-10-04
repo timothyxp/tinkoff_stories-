@@ -7,6 +7,11 @@ import os
 import pandas as pd
 import pickle
 from collections import Counter
+from sklearn.model_selection import train_test_split
+from lightgbm import LGBMClassifier
+from itertools import product
+from pipeline.metrics.custom_tinkoff import tinkoff_custom
+
 
 
 def _load_cls(module_path, cls_name):
@@ -53,16 +58,9 @@ def run_train_model(config: ConfigBase):
 
     logger.info("start fitting model")
 
-    class_to_int = {
-        "dislike": 0,
-        "skip": 1,
-        "view": 2,
-        "like": 3
-    }
-
     customers = train_data["customer_id"]
     stories = train_data["story_id"]
-    target = [class_to_int[targ] for targ in train_data["event"]]
+    target = [config.class_to_int[targ] for targ in train_data["event"]]
     time = train_data["event_dttm"]
 
     train_data.drop(columns=["customer_id", "event_dttm", "story_id", "event"], inplace=True)
@@ -74,6 +72,75 @@ def run_train_model(config: ConfigBase):
     logger.info(f"saving model to {main_model_path}")
     with open(main_model_path, "wb") as f:
         pickle.dump(model, f)
+
+
+def run_grid_search(config: ConfigBase):
+    train_data = pd.read_csv(config.train_data_path)
+
+    target = [config.class_to_int[targ] for targ in train_data["event"]]
+
+    train_data.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
+
+    n_estimators = [100, 200, 500, 1000]
+    learning_rate = [0.05, 0.1, 0.2]
+    num_leaves = [15, 31, 63, 127]
+
+    class_weight_0 = [0.1, 0.2, 0.3, 0.4]
+    class_weight_1 = [0.1]
+    class_weight_2 = [0.1]
+    class_weight_3 = [0.1, 0.2, 0.3]
+
+    X_train, X_test, Y_train, Y_test = train_test_split(train_data, target)
+
+    hyper_parameters = product(n_estimators, learning_rate, num_leaves,
+                               class_weight_0, class_weight_1, class_weight_2, class_weight_3)
+
+    best_hyper_params = ()
+    best_metric = -1
+
+    for n_estimator, lr, num_leave, cw0, cw1, cw2, cw3  in hyper_parameters:
+        logger.info(f"start optimize with params"
+                    f"n_estimators={n_estimator}"
+                    f"learning_rate={lr}"
+                    f"num_leaves={num_leave}")
+        model = LGBMClassifier(
+            n_estimators=n_estimator,
+            learning_rate=lr,
+            num_leaves=num_leave,
+            class_weight={
+                "0": cw0,
+                "1": cw1,
+                "2": cw2,
+                "3": cw3
+            }
+        )
+
+        logger.debug("fitting")
+        model.fit(X_train, Y_train)
+
+        predctions = model.predict(X_test)
+
+        metric = tinkoff_custom(predctions, target)
+
+        logger.debug(f"have metric {metric}")
+
+        if metric > best_metric:
+            best_metric = metric
+
+            best_hyper_params = (n_estimator, lr, num_leave, cw0, cw1, cw2, cw3)
+
+    logger.info(f"optimize to {best_metric}")
+    logger.info(f"best params"
+                f"n_estimators={best_hyper_params[0]}"
+                f"learning_rate={best_hyper_params[1]}"
+                f"num_leaves={best_hyper_params[2]}"
+                f"cw_0={best_hyper_params[3]}"
+                f"cw_1={best_hyper_params[4]}"
+                f"cw_2={best_hyper_params[5]}"
+                f"cw_3={best_hyper_params[6]}"
+    )
+    logger.info("optimization finished")
+
 
 
 def train_collaborative_model(config: ConfigBase):

@@ -57,7 +57,7 @@ class Config(ConfigBase):
             learning_rate=0.1,
             num_leaves=31,
             n_estimators=300,
-
+            n_jobs=8
         )
 
         collaborative_model = lambda : ALS()

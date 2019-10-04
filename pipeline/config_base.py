@@ -65,6 +65,14 @@ class ConfigBase:
 
         self.score_mapper = score_mapper
 
+        self.class_to_int = {
+            "dislike": 0,
+            "skip": 1,
+            "view": 2,
+            "like": 3
+        }
+
+
     @property
     def stories_descriptions_parsed(self):
         return f"{self.data_path}/stories_descriptions_parsed.csv"
