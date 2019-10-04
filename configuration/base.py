@@ -41,7 +41,7 @@ class Config(ConfigBase):
             FeatureExtractorDayCategory(),
             FeatureExtractorMeanLikeValueForStory(),
             FeatureExtractorMeanLikeValueForCustomer(),
-            #FeatureExractorOntHotEncodingStories(),
+            FeatureExractorOntHotEncodingStories(),
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
@@ -56,7 +56,7 @@ class Config(ConfigBase):
                 3: 0.3
             },
             learning_rate=0.03,
-            num_leaves=5,
+            num_leaves=4,
             n_estimators=30,
             n_jobs=8
         )

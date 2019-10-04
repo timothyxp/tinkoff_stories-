@@ -64,12 +64,14 @@ class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
         stories_reaction: pd.DataFrame = stories \
             [["customer_id", "event"]] \
             .groupby("customer_id") \
-            .agg(
-            lambda x: len([y == "dislike" for y in x]),
-            lambda x: len([y == "skip" for y in x]),
-            lambda x: len([y == "view" for y in x]),
-            lambda x: len([y == "like" for y in x]),
-        )
+            .event.agg({
+            "dislike_amount": lambda x: len(list(filter(lambda y: y == "dislike", x))),
+            "skip_amount": lambda x: len(list(filter(lambda y: y == "skip", x))),
+            "view_amount": lambda x: len(list(filter(lambda y: y == "view", x))),
+            "like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
+        })
+
+        print(stories_reaction.columns)
 
         candidates = candidates \
             .merge(stories_reaction, on="customer_id", how="left")
