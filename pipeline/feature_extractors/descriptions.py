@@ -2,6 +2,7 @@ from .base import FeatureExtractorBase
 import pandas as pd
 from pipeline.config_base import ConfigBase
 from colour import Color
+import numpy as np
 
 
 class FeatureExtractorStaticDescriptions(FeatureExtractorBase):
@@ -15,12 +16,12 @@ class FeatureExtractorStaticDescriptions(FeatureExtractorBase):
         candidates = candidates \
             .merge(description, on="story_id", how="left")
 
-        candidates["icon_0_red"] = [Color(hex).rgb[0] if hex != "" else 0 for hex in candidates["icon_hex_0"]]
-        candidates["icon_0_green"] = [Color(hex).rgb[1] if hex != "" else 0 for hex in candidates["icon_hex_0"]]
-        candidates["icon_0_blue"] = [Color(hex).rgb[2] if hex != "" else 0 for hex in candidates["icon_hex_0"]]
-        candidates["icon_0_red"] = [Color(hex).rgb[0] if hex != "" else 0 for hex in candidates["icon_hex_1"]]
-        candidates["icon_0_green"] = [Color(hex).rgb[1] if hex != "" else 0 for hex in candidates["icon_hex_1"]]
-        candidates["icon_0_blue"] = [Color(hex).rgb[2] if hex != "" else 0 for hex in candidates["icon_hex_1"]]
+        candidates["icon_0_red"] = [Color(hex).rgb[0] if hex is str else 0 for hex in candidates["icon_hex_0"]]
+        candidates["icon_0_green"] = [Color(hex).rgb[1] if hex is str else 0 for hex in candidates["icon_hex_0"]]
+        candidates["icon_0_blue"] = [Color(hex).rgb[2] if hex is str else 0 for hex in candidates["icon_hex_0"]]
+        candidates["icon_0_red"] = [Color(hex).rgb[0] if hex is str else 0 for hex in candidates["icon_hex_1"]]
+        candidates["icon_0_green"] = [Color(hex).rgb[1] if hex is str else 0 for hex in candidates["icon_hex_1"]]
+        candidates["icon_0_blue"] = [Color(hex).rgb[2] if hex is str else 0 for hex in candidates["icon_hex_1"]]
 
         candidates.drop(columns=["icon_hex_0", "icon_hex_1"], inplace=True)
 
