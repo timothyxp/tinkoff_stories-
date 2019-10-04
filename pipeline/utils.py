@@ -81,14 +81,14 @@ def run_grid_search(config: ConfigBase):
 
     train_data.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
 
-    n_estimators = [50, 100, 150]
-    learning_rate = [0.03, 0.05, 0.07]
-    num_leaves = [7, 15, 23]
+    n_estimators = [30, 50, 70]
+    learning_rate = [0.02, 0.03, 0.04]
+    num_leaves = [7]
 
-    class_weight_0 = [0.1, 0.2, 0.3, 0.4]
+    class_weight_0 = [0.1]
     class_weight_1 = [0.1]
     class_weight_2 = [0.1]
-    class_weight_3 = [0.1, 0.2, 0.3]
+    class_weight_3 = [0.3]
 
     X_train, X_test, Y_train, Y_test = train_test_split(train_data, target)
 

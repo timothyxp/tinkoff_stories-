@@ -10,7 +10,7 @@ from pipeline.feature_extractors.transactions_features import FeatureExtractorAv
     FeatureExtractorAvgMeanTransactionAmtOnMerchant, FeatureExtractorAvgMerchantUnique, \
     FeatureExtractorAvgTransactionAmtByMonth
 from pipeline.feature_extractors.stories_reaction_features import FeatureExtractorMeanLikeValueForCustomer,  \
-    FeatureExtractorMeanLikeValueForStory
+    FeatureExtractorMeanLikeValueForStory, FeatureExractorOntHotEncodingStories
 from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
@@ -41,6 +41,7 @@ class Config(ConfigBase):
             FeatureExtractorDayCategory(),
             FeatureExtractorMeanLikeValueForStory(),
             FeatureExtractorMeanLikeValueForCustomer(),
+            #FeatureExractorOntHotEncodingStories(),
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
@@ -54,9 +55,9 @@ class Config(ConfigBase):
                 2: 0.1,
                 3: 0.3
             },
-            learning_rate=0.1,
-            num_leaves=31,
-            n_estimators=300,
+            learning_rate=0.03,
+            num_leaves=7,
+            n_estimators=50,
             n_jobs=8
         )
 
