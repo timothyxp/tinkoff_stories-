@@ -55,8 +55,8 @@ class Config(ConfigBase):
                 2: 0.1,
                 3: 0.3
             },
-            learning_rate=0.02,
-            num_leaves=7,
+            learning_rate=0.03,
+            num_leaves=5,
             n_estimators=30,
             n_jobs=8
         )
