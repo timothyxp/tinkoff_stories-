@@ -81,9 +81,9 @@ def run_grid_search(config: ConfigBase):
 
     train_data.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
 
-    n_estimators = [100, 200, 500, 1000]
-    learning_rate = [0.05, 0.1, 0.2]
-    num_leaves = [15, 31, 63, 127]
+    n_estimators = [50, 100, 150]
+    learning_rate = [0.03, 0.05, 0.07]
+    num_leaves = [7, 15, 23]
 
     class_weight_0 = [0.1, 0.2, 0.3, 0.4]
     class_weight_1 = [0.1]
@@ -102,7 +102,12 @@ def run_grid_search(config: ConfigBase):
         logger.info(f"start optimize with params, "
                     f"n_estimators={n_estimator}, "
                     f"learning_rate={lr}, "
-                    f"num_leaves={num_leave}")
+                    f"num_leaves={num_leave}"
+                    f"cw_0={cw0}, "
+                    f"cw_1={cw1}, "
+                    f"cw_2={cw2}, "
+                    f"cw_3={cw3}"
+                    )
         model = LGBMClassifier(
             n_estimators=n_estimator,
             learning_rate=lr,
@@ -112,7 +117,8 @@ def run_grid_search(config: ConfigBase):
                 1: cw1,
                 2: cw2,
                 3: cw3
-            }
+            },
+            n_jobs=8
         )
 
         logger.debug("fitting")
