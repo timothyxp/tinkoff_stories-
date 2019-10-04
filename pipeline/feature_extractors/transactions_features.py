@@ -41,11 +41,30 @@ class FeatureExtractorAvgTransactionAmtByMonth(FeatureExtractorBase):
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         user_transactions = transactions[['customer_id', 'transaction_amt']]
         for i in [5, 6, 7]:
-            transactions_mean_bill_month = transactions[transactions['transaction_month'] == i].groupby(['customer_id'])[
+            transactions_bill_month = transactions[transactions['transaction_month'] == i].groupby(['customer_id'])[
                 'transaction_amt'].mean().reset_index()
-            transactions_mean_bill_month = transactions_mean_bill_month.rename(
-                columns={'transaction_amt': 'transaction_amt_mean_month_' + str(i)})
-            user_transactions = user_transactions.merge(transactions_mean_bill_month, on=['customer_id'], how='left')
+            transactions_bill_month = transactions_bill_month.rename(
+                columns={'transaction_amt': 'transaction_amt_mean_month_mean_' + str(i)})
+            user_transactions = user_transactions.merge(transactions_bill_month, on=['customer_id'], how='left')
+
+            transactions_bill_month = transactions[transactions['transaction_month'] == i].groupby(['customer_id'])[
+                'transaction_amt'].min().reset_index()
+            transactions_bill_month = transactions_bill_month.rename(
+                columns={'transaction_amt': 'transaction_amt_mean_month_min_' + str(i)})
+            user_transactions = user_transactions.merge(transactions_bill_month, on=['customer_id'], how='left')
+
+            transactions_bill_month = transactions[transactions['transaction_month'] == i].groupby(['customer_id'])[
+                'transaction_amt'].max().reset_index()
+            transactions_bill_month = transactions_bill_month.rename(
+                columns={'transaction_amt': 'transaction_amt_mean_month_max_' + str(i)})
+            user_transactions = user_transactions.merge(transactions_bill_month, on=['customer_id'], how='left')
+
+            transactions_bill_month = transactions[transactions['transaction_month'] == i].groupby(['customer_id'])[
+                'transaction_amt'].median().reset_index()
+            transactions_bill_month = transactions_bill_month.rename(
+                columns={'transaction_amt': 'transaction_amt_mean_month_median_' + str(i)})
+            user_transactions = user_transactions.merge(transactions_bill_month, on=['customer_id'], how='left')
+
         user_transactions = user_transactions.fillna(0)
         user_transactions = user_transactions.drop(['transaction_amt'], axis=1)
 
