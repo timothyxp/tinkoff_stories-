@@ -99,19 +99,19 @@ def run_grid_search(config: ConfigBase):
     best_metric = -1
 
     for n_estimator, lr, num_leave, cw0, cw1, cw2, cw3  in hyper_parameters:
-        logger.info(f"start optimize with params"
-                    f"n_estimators={n_estimator}"
-                    f"learning_rate={lr}"
+        logger.info(f"start optimize with params, "
+                    f"n_estimators={n_estimator}, "
+                    f"learning_rate={lr}, "
                     f"num_leaves={num_leave}")
         model = LGBMClassifier(
             n_estimators=n_estimator,
             learning_rate=lr,
             num_leaves=num_leave,
             class_weight={
-                "0": cw0,
-                "1": cw1,
-                "2": cw2,
-                "3": cw3
+                0: cw0,
+                1: cw1,
+                2: cw2,
+                3: cw3
             }
         )
 
@@ -130,13 +130,13 @@ def run_grid_search(config: ConfigBase):
             best_hyper_params = (n_estimator, lr, num_leave, cw0, cw1, cw2, cw3)
 
     logger.info(f"optimize to {best_metric}")
-    logger.info(f"best params"
-                f"n_estimators={best_hyper_params[0]}"
-                f"learning_rate={best_hyper_params[1]}"
-                f"num_leaves={best_hyper_params[2]}"
-                f"cw_0={best_hyper_params[3]}"
-                f"cw_1={best_hyper_params[4]}"
-                f"cw_2={best_hyper_params[5]}"
+    logger.info(f"best params, "
+                f"n_estimators={best_hyper_params[0]}, "
+                f"learning_rate={best_hyper_params[1]}, "
+                f"num_leaves={best_hyper_params[2]}, "
+                f"cw_0={best_hyper_params[3]}, "
+                f"cw_1={best_hyper_params[4]}, "
+                f"cw_2={best_hyper_params[5]}, "
                 f"cw_3={best_hyper_params[6]}"
     )
     logger.info("optimization finished")
