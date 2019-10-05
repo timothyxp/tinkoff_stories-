@@ -19,5 +19,6 @@ class FeatureExtractorAgeCategoryAndAge(FeatureExtractorBase):
         age = users[['age', 'customer_id']].drop_duplicates(subset=['customer_id'])
         age = age.rename(columns={{'age': 'customer_age'}})
         age['age_category'] = age.apply(lambda row: categorize_age(row))
+        age.age_category = age.age_category.astype('category')
         candidates = candidates.merge(age, on='customer_id', how='left')
         return candidates

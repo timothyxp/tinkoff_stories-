@@ -30,7 +30,7 @@ class Config(ConfigBase):
             FeatureExtractorCustomerChildrenAmount(),
             FeatureExtractorCustomerJobCategory(),
             FeatureExtractorCustomerGender(),
-            FeatureExtractorCustomerAge(),
+            FeatureExtractorAgeCategoryAndAge(),
             FeatureExtractorMinMaxTransactionAmt(),
             FeatureExtractorCustomerSumTransactionAmt(),
             FeatureExtractorAvgTransactionAmt(),
@@ -47,6 +47,7 @@ class Config(ConfigBase):
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
+            FeatureExtractorDuplicatedReaction(),
             FeatureExtractorStaticDescriptions('stories_desc.csv'),
             FeatureExtractorStaticDescriptions(self)
         ])
