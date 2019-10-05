@@ -229,7 +229,7 @@ def run_predict(config: ConfigBase):
 
     inference_data = pd.read_csv(config.inference_data, low_memory=False)
 
-    with open("cat_festures.json", "w") as f:
+    with open("cat_festures.json", "r") as f:
         cat_features = json.loads(f.read())
 
     for column in cat_features:
