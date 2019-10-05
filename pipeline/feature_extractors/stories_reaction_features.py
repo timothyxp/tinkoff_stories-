@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-
+from pipeline import STORIES_REACTION_FULL_PATH
 from .base import FeatureExtractorBase
 
 
@@ -76,4 +76,18 @@ class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
         candidates = candidates \
             .merge(stories_reaction, on="customer_id", how="left")
 
+        return candidates
+
+
+class FeatureExtractorDuplicatedReaction(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories_reaction_full = pd.concat([stories, candidates]).\
+            drop_duplicates(subset=['customer_id', 'event_dttm', 'story_id'], keep='first')
+        stories_reaction_full = stories_reaction_full.sort_values(by='event_dttm')
+        stories_reaction_full['is_duplicate'] = stories_reaction_full.\
+            duplicated(subset=['customer_id', 'story_id'], keep='first')
+
+        candidates = candidates.merge(stories_reaction_full['customer_id', 'story_id', 'event_dttm', 'is_duplicate'],
+                                      on=['customer_id', 'story_id', 'event_dttm'], how='left')
+        candidates.is_duplicate = candidates.is_duplicate.astype('category')
         return candidates
