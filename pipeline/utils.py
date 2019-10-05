@@ -85,7 +85,7 @@ def run_grid_search(config: ConfigBase):
     learning_rate = [0.02, 0.03, 0.04]
     num_leaves = [4, 5, 6]
 
-    class_weight_0 = [0.1, 0.2, 0.4, 0.6, 0.8]
+    class_weight_0 = [0.1, 0.2]
     class_weight_1 = [0.1]
     class_weight_2 = [0.1]
     class_weight_3 = [0.3]
