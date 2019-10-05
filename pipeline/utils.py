@@ -126,19 +126,10 @@ def run_grid_search(config: ConfigBase):
                     )
         model = CatBoostClassifier(
             iterations=n_estimator,
-           # n_estimators=n_estimator,
-            max_depth=5,
-            max_leaves=num_leaves,
-            use_best_model=True,
+            max_depth=num_leave,
             learning_rate=lr,
-           # num_leaves=num_leave,
-           #  class_weights={
-           #      0: cw0,
-           #      1: cw1,
-           #      2: cw2,
-           #      3: cw3
-           #  },
-            thread_count=8
+            thread_count=8,
+            verbose=0
         )
 
         logger.debug("fitting")

@@ -61,8 +61,8 @@ class Config(ConfigBase):
                 3: 0.3
             },
             learning_rate=0.07,
-            num_leaves=23,
-            n_estimators=70,
+            depth=2,
+            iterations=70,
             thread_count=8
         )
 
