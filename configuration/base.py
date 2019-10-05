@@ -2,7 +2,8 @@ from pipeline.config_base import ConfigBase
 from pipeline.beautifier.beautifier import DataBeautifier
 from pipeline.feature_extractors.base import FeatureExtractorCombiner
 from pipeline.feature_extractors.als import FeatureExtractorALS
-from pipeline.feature_extractors.age_features import FeatureExtractorAgeCategoryAndAge
+from pipeline.feature_extractors.age_features import FeatureExtractorAgeCategoryAndAge, \
+    FeatureExtractorCountForEachCategory
 from pipeline.feature_extractors.gender_features import FeatureExtractorCustomerGender
 from pipeline.feature_extractors.childer_features import FeatureExtractorCustomerChildrenAmount
 from pipeline.feature_extractors.transactions_features import FeatureExtractorAvgTransactionAmt, \
@@ -16,7 +17,8 @@ from pipeline.feature_extractors.time_features import FeatureExtractorDayCategor
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
     FeatureExtractorCustomerJobPositionClassify, FeatureExtractorCustomerJobTitleTransactionMean
-from pipeline.feature_extractors.descriptions import FeatureExtractorStaticDescriptions, FeatureExtractorDescriptionsFromModel
+from pipeline.feature_extractors.descriptions import FeatureExtractorStaticDescriptions, \
+    FeatureExtractorDescriptionsFromModel, FeatureExtractorDescriptionsFelix
 import lightgbm
 from pipeline.collaborative_models.als import ALS
 from catboost import CatBoostClassifier
@@ -27,6 +29,7 @@ class Config(ConfigBase):
         data_beautifier = DataBeautifier(self)
 
         feature_extractor = FeatureExtractorCombiner([
+            FeatureExtractorCountForEachCategory(),
             FeatureExtractorALS(self),
             FeatureExtractorCustomerChildrenAmount(),
             FeatureExtractorCustomerJobCategory(),
@@ -50,7 +53,8 @@ class Config(ConfigBase):
             FeatureExtractorCustomerJobTitleTransactionMean(),
             FeatureExtractorDescriptionsFromModel('stories_desc.csv'),
             FeatureExtractorDuplicatedReaction(),
-            FeatureExtractorStaticDescriptions(self)
+            FeatureExtractorStaticDescriptions(self),
+            FeatureExtractorDescriptionsFelix("felix_descriptions.csv")
         ])
 
         model = lambda : CatBoostClassifier(

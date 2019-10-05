@@ -36,3 +36,14 @@ class FeatureExtractorDescriptionsFromModel(FeatureExtractorBase):
         stories_desc = pd.read_csv(self.path, encoding='utf-8')
         candidates = candidates.merge(stories_desc, on=['story_id'], how='left')
         return candidates
+
+class FeatureExtractorDescriptionsFelix(FeatureExtractorBase):
+    def __init__(self, path):
+        self.path = path
+
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories_features = pd.read_csv(self.path)
+
+        candidates = candidates.merge(stories_features, on="story_id", how="left")
+
+        return candidates
