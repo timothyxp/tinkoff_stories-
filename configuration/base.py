@@ -11,7 +11,7 @@ from pipeline.feature_extractors.transactions_features import FeatureExtractorAv
     FeatureExtractorAvgTransactionAmtByMonth
 from pipeline.feature_extractors.stories_reaction_features import FeatureExtractorMeanLikeValueForCustomer,  \
     FeatureExtractorMeanLikeValueForStory, FeatureExtractorStoriesReactionsAmount, \
-    FeatureExractorUserStoriesReactionsAmount
+    FeatureExractorUserStoriesReactionsAmount, FeatureExtractorDuplicatedReaction
 from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
@@ -48,6 +48,7 @@ class Config(ConfigBase):
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
             FeatureExtractorDescriptionsFromModel('stories_desc.csv'),
+            FeatureExtractorDuplicatedReaction(),
             FeatureExtractorStaticDescriptions(self)
         ])
 
