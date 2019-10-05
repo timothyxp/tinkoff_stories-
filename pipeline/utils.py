@@ -136,10 +136,24 @@ def run_grid_search(config: ConfigBase):
     features = feature_extractor.extract(transactions.copy(), X_train.copy(), users.copy(), X_train.copy())
     features_for_test = feature_extractor.extract(transactions.copy(), X_train.copy(), users.copy(), X_test.copy())
 
+    cat_features = []
+
+    ignore_columns = ["customer_id", "event_dttm", "story_id", "event"]
+
+    for column in features.dtypes.keys():
+        typ = str(features.dtypes[column])
+        if "int" in typ or "float" in typ or "bool" in typ or column in ignore_columns:
+            continue
+
+        logger.debug(f"cat column {column}")
+        cat_features.append(column)
+        features[column] = features[column].astype(str)
+        features_for_test[column] = features_for_test[column].astype(str)
+
     X_train = X_train.merge(features, on=['customer_id', 'story_id', 'event_dttm', 'event'], how='left')
-    X_train.drop(columns=["customer_id", "story_id", "event_dttm", 'event'], inplace=True)
+    X_train.drop(columns=ignore_columns, inplace=True)
     X_test = X_test.merge(features_for_test, on=['customer_id', 'story_id', 'event_dttm', 'event'], how='left')
-    X_test.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
+    X_test.drop(columns=ignore_columns, inplace=True)
 
     Y_train = target[:train_shape]
     Y_test = target[train_shape:]
@@ -168,7 +182,8 @@ def run_grid_search(config: ConfigBase):
             max_depth=num_leave,
             learning_rate=lr,
             thread_count=8,
-            verbose=0
+            verbose=0,
+            cat_features=cat_features
         )
 
         logger.debug("fitting")
