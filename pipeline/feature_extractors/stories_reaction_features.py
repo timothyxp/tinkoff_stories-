@@ -1,6 +1,5 @@
 import pandas as pd
 from datetime import datetime
-from pipeline import STORIES_REACTION_FULL_PATH
 from .base import FeatureExtractorBase
 
 
@@ -59,7 +58,7 @@ class FeatureExtractorMeanLikeValueForStory(FeatureExtractorBase):
         return candidates.merge(stories_event_int, how='left', on='story_id')
 
 
-class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
+class FeatureExractorUserStoriesReactionsAmount(FeatureExtractorBase):
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         stories_reaction: pd.DataFrame = stories \
             [["customer_id", "event"]] \
@@ -70,8 +69,6 @@ class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
             "view_amount": lambda x: len(list(filter(lambda y: y == "view", x))),
             "like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
         })
-
-        print(stories_reaction.columns)
 
         candidates = candidates \
             .merge(stories_reaction, on="customer_id", how="left")
@@ -90,4 +87,21 @@ class FeatureExtractorDuplicatedReaction(FeatureExtractorBase):
         candidates = candidates.merge(stories_reaction_full['customer_id', 'story_id', 'event_dttm', 'is_duplicate'],
                                       on=['customer_id', 'story_id', 'event_dttm'], how='left')
         candidates.is_duplicate = candidates.is_duplicate.astype('category')
+
+
+class FeatureExtractorStoriesReactionsAmount(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories_reaction: pd.DataFrame = stories \
+            [["story_id", "event"]] \
+            .groupby("story_id") \
+            .event.agg({
+            "story_dislike_amount": lambda x: len(list(filter(lambda y: y == "dislike", x))),
+            "story_skip_amount": lambda x: len(list(filter(lambda y: y == "skip", x))),
+            "story_view_amount": lambda x: len(list(filter(lambda y: y == "view", x))),
+            "story_like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
+        })
+
+        candidates = candidates \
+            .merge(stories_reaction, on="story_id", how="left")
+
         return candidates
