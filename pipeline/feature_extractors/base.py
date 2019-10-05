@@ -52,7 +52,7 @@ class FeatureExtractorCombiner(FeatureExtractorBase):
             logger.debug(f"shape after merge {result.shape}")
 
         return result.drop_duplicates(
-            subset=["customer_id", "story_id"]
+            subset=merge_columns
         )
 
     def __repr__(self):

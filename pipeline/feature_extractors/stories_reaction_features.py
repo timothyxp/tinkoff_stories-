@@ -1,6 +1,5 @@
 import pandas as pd
 from datetime import datetime
-
 from .base import FeatureExtractorBase
 
 
@@ -59,19 +58,50 @@ class FeatureExtractorMeanLikeValueForStory(FeatureExtractorBase):
         return candidates.merge(stories_event_int, how='left', on='story_id')
 
 
-class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
+class FeatureExractorUserStoriesReactionsAmount(FeatureExtractorBase):
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         stories_reaction: pd.DataFrame = stories \
             [["customer_id", "event"]] \
             .groupby("customer_id") \
-            .agg(
-            lambda x: len([y == "dislike" for y in x]),
-            lambda x: len([y == "skip" for y in x]),
-            lambda x: len([y == "view" for y in x]),
-            lambda x: len([y == "like" for y in x]),
-        )
+            .event.agg({
+            "dislike_amount": lambda x: len(list(filter(lambda y: y == "dislike", x))),
+            "skip_amount": lambda x: len(list(filter(lambda y: y == "skip", x))),
+            "view_amount": lambda x: len(list(filter(lambda y: y == "view", x))),
+            "like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
+        })
 
         candidates = candidates \
             .merge(stories_reaction, on="customer_id", how="left")
+
+        return candidates
+
+
+class FeatureExtractorDuplicatedReaction(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories_reaction_full = pd.concat([stories, candidates]).\
+            drop_duplicates(subset=['customer_id', 'event_dttm', 'story_id'], keep='first')
+        stories_reaction_full = stories_reaction_full.sort_values(by='event_dttm')
+        stories_reaction_full['is_duplicate'] = stories_reaction_full.\
+            duplicated(subset=['customer_id', 'story_id'], keep='first')
+
+        candidates = candidates.merge(stories_reaction_full['customer_id', 'story_id', 'event_dttm', 'is_duplicate'],
+                                      on=['customer_id', 'story_id', 'event_dttm'], how='left')
+        candidates.is_duplicate = candidates.is_duplicate.astype('category')
+
+
+class FeatureExtractorStoriesReactionsAmount(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories_reaction: pd.DataFrame = stories \
+            [["story_id", "event"]] \
+            .groupby("story_id") \
+            .event.agg({
+            "story_dislike_amount": lambda x: len(list(filter(lambda y: y == "dislike", x))),
+            "story_skip_amount": lambda x: len(list(filter(lambda y: y == "skip", x))),
+            "story_view_amount": lambda x: len(list(filter(lambda y: y == "view", x))),
+            "story_like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
+        })
+
+        candidates = candidates \
+            .merge(stories_reaction, on="story_id", how="left")
 
         return candidates
