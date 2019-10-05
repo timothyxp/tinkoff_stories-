@@ -55,7 +55,22 @@ def run_train(config: ConfigBase):
 def run_train_model(config: ConfigBase):
     train_data = pd.read_csv(config.train_data_path)
 
-    model = config.model()
+    cat_features = []
+
+    for column in train_data.dtypes:
+        typ = str(train_data.dtypes[column])
+        if "int" in typ or "float" in typ or "bool" in typ:
+            continue
+
+        cat_features.append(column)
+
+    model = CatBoostClassifier(
+        learning_rate=0.07,
+        max_depth=2,
+        iterations=70,
+        thread_count=8,
+        cat_features=cat_features
+    )
 
     logger.info("start fitting model")
 
