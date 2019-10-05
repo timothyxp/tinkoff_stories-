@@ -84,9 +84,11 @@ class FeatureExtractorDuplicatedReaction(FeatureExtractorBase):
         stories_reaction_full['is_duplicate'] = stories_reaction_full.\
             duplicated(subset=['customer_id', 'story_id'], keep='first')
 
-        candidates = candidates.merge(stories_reaction_full['customer_id', 'story_id', 'event_dttm', 'is_duplicate'],
+        candidates = candidates.merge(stories_reaction_full[['customer_id', 'story_id', 'event_dttm', 'is_duplicate']],
                                       on=['customer_id', 'story_id', 'event_dttm'], how='left')
         candidates.is_duplicate = candidates.is_duplicate.astype('category')
+
+        return candidates
 
 
 class FeatureExtractorStoriesReactionsAmount(FeatureExtractorBase):
