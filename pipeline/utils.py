@@ -128,7 +128,7 @@ def run_grid_search(config: ConfigBase):
 
         predictions = [config.score_mapper[pred] for pred in predctions]
 
-        metric = tinkoff_custom(predictions, target)
+        metric = tinkoff_custom(predictions, Y_test)
 
         logger.debug(f"have metric {metric}")
 
