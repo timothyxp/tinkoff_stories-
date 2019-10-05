@@ -96,7 +96,7 @@ def run_grid_search(config: ConfigBase):
 
     divider = 0.7
 
-    train_shape = all_shape * divider
+    train_shape = int(all_shape * divider)
 
     X_train = train_data[:train_shape]
     X_test = train_data[train_shape:]
