@@ -19,8 +19,8 @@ class FeatureExtractorMinMaxTransactionAmt(FeatureExtractorBase):
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         user_transactions = transactions[['customer_id', 'transaction_amt']]
 
-        user_transactions_minmax = user_transactions.groupby('customer_id').agg(['min', 'max'])
-        user_transactions_minmax = user_transactions_minmax.transaction_amt
+        user_transactions_minmax = user_transactions.groupby('customer_id').agg(['min', 'max']).reset_index()
+
         user_transactions_minmax = user_transactions_minmax.rename(columns={'min': 'customer_min_amt',
                                                                             'max': 'customer_max_amt'})
         logger.debug(f"columns in {repr(self)} is {user_transactions_minmax.columns}")
