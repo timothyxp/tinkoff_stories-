@@ -30,7 +30,7 @@ class FeatureExtractorCountForEachCategory(FeatureExtractorBase):
         age['age_category'] = age.apply(lambda row: categorize_age(row), axis=1)
         age = age.rename(columns={'age': 'customer_age'})
 
-        candidates = candidates.merge(users[['customer_id', 'age']])
+        candidates = candidates.merge(users[['customer_id', 'age']], on='customer_id', how='left')
         candidates['age_category'] = candidates.apply(lambda row: categorize_age(row), axis=1)
         stories = stories.merge(age, on='customer_id', how='left')
         ans_to_int = {'dislike': 0, 'skip': 1, 'view': 2, 'like': 3}
