@@ -12,6 +12,7 @@ from lightgbm import LGBMClassifier
 from itertools import product
 from pipeline.metrics.custom_tinkoff import tinkoff_custom
 from catboost import CatBoostClassifier
+import json
 
 
 
@@ -67,6 +68,7 @@ def run_train_model(config: ConfigBase):
         logger.debug(f"cat column {column}")
         cat_features.append(column)
         train_data[column] = train_data[column].astype(str)
+
 
     model = CatBoostClassifier(
         learning_rate=0.07,
@@ -223,6 +225,19 @@ def run_predict(config: ConfigBase):
     logger.info("read inference data")
 
     inference_data = pd.read_csv(config.inference_data)
+
+    cat_features = []
+
+    drop_columns = ["customer_id", "event_dttm", "story_id", "answer_id"]
+
+    for column in inference_data.dtypes.keys():
+        typ = str(inference_data.dtypes[column])
+        if "int" in typ or "float" in typ or "bool" in typ or column in drop_columns:
+            continue
+
+        logger.debug(f"cat column {column}")
+        cat_features.append(column)
+        inference_data[column] = inference_data[column].astype(str)
 
     logger.info(f"inference data shape {inference_data.shape}")
 
