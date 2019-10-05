@@ -47,6 +47,7 @@ class Config(ConfigBase):
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
+            FeatureExtractorStaticDescriptions('stories_desc.csv'),
             FeatureExtractorStaticDescriptions(self)
         ])
 

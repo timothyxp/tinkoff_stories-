@@ -9,4 +9,4 @@ Then, call:
 
 For example we want train cf_models
 
-`PYTHONPATH=. python bin/train_collaborative_model.py configuration/base.py`
+`PYTHONPATH=. python bin/train_collaborative_model.py configuration/base.py'
