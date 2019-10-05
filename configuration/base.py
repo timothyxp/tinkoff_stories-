@@ -2,7 +2,7 @@ from pipeline.config_base import ConfigBase
 from pipeline.beautifier.beautifier import DataBeautifier
 from pipeline.feature_extractors.base import FeatureExtractorCombiner
 from pipeline.feature_extractors.als import FeatureExtractorALS
-from pipeline.feature_extractors.age_features import FeatureExtractorCustomerAge
+from pipeline.feature_extractors.age_features import FeatureExtractorAgeCategoryAndAge
 from pipeline.feature_extractors.gender_features import FeatureExtractorCustomerGender
 from pipeline.feature_extractors.childer_features import FeatureExtractorCustomerChildrenAmount
 from pipeline.feature_extractors.transactions_features import FeatureExtractorAvgTransactionAmt, \
@@ -11,7 +11,7 @@ from pipeline.feature_extractors.transactions_features import FeatureExtractorAv
     FeatureExtractorAvgTransactionAmtByMonth
 from pipeline.feature_extractors.stories_reaction_features import FeatureExtractorMeanLikeValueForCustomer,  \
     FeatureExtractorMeanLikeValueForStory, FeatureExtractorStoriesReactionsAmount, \
-    FeatureExractorUserStoriesReactionsAmount
+    FeatureExractorUserStoriesReactionsAmount, FeatureExtractorDuplicatedReaction
 from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
