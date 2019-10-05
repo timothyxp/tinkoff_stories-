@@ -69,6 +69,7 @@ def run_train_model(config: ConfigBase):
         cat_features.append(column)
         train_data[column] = train_data[column].astype(str)
 
+    logger.debug(f"have {repr(cat_features)} columns")
     with open("cat_festures.json", "w") as f:
         f.write(json.dumps(cat_features))
 
@@ -99,7 +100,7 @@ def run_train_model(config: ConfigBase):
 
 
 def run_grid_search(config: ConfigBase):
-    train_data = pd.read_csv(config.train_data_path)
+    train_data = pd.read_csv(config.train_data_path, low_memory=False)
 
     train_data = train_data.sort_values(by="event_dttm")
 
@@ -226,7 +227,7 @@ def build_inference_data(config):
 def run_predict(config: ConfigBase):
     logger.info("read inference data")
 
-    inference_data = pd.read_csv(config.inference_data)
+    inference_data = pd.read_csv(config.inference_data, low_memory=False)
 
     with open("cat_festures.json", "w") as f:
         cat_features = json.loads(f.read())
