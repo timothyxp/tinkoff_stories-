@@ -183,6 +183,8 @@ def build_inference_data(config):
     logger.info("start extract features")
     features = feature_extractor.extract(transactions, stories, users, candidates)
 
+    logger.info(f"features shape {features.shape}")
+
     logger.info("saving data")
     features.to_csv(config.inference_data, index=False)
 
@@ -191,6 +193,8 @@ def run_predict(config: ConfigBase):
     logger.info("read inference data")
 
     inference_data = pd.read_csv(config.inference_data)
+
+    logger.info(f"inference data shape {inference_data.shape}")
 
     customers = inference_data["customer_id"]
     stories = inference_data["story_id"]
