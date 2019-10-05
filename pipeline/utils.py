@@ -107,7 +107,7 @@ def run_grid_search(config: ConfigBase):
 
     #train_data = pd.read_csv(config.train_data_path)
 
-    #train_data = train_data.sort_values(by="event_dttm")
+    train_data = train_data.sort_values(by="event_dttm")
 
     target = [config.class_to_int[targ] for targ in train_data["event"]]
     #train_data.drop(columns=["event"], inplace=True)
@@ -136,7 +136,7 @@ def run_grid_search(config: ConfigBase):
     features = feature_extractor.extract(transactions.copy(), X_train.copy(), users.copy(), X_train.copy())
     features_for_test = feature_extractor.extract(transactions.copy(), X_train.copy(), users.copy(), X_test.copy())
 
-    X_train = X_train.merge(features, on=['customer-id', 'story_id', 'event_dttm', 'event'], how='left')
+    X_train = X_train.merge(features, on=['customer_id', 'story_id', 'event_dttm', 'event'], how='left')
     X_train.drop(columns=["customer_id", "story_id", "event_dttm", 'event'], inplace=True)
     X_test = X_test.merge(features_for_test, on=['customer_id', 'story_id', 'event_dttm', 'event'], how='left')
     X_test.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
