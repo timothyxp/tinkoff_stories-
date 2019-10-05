@@ -57,9 +57,11 @@ def run_train_model(config: ConfigBase):
 
     cat_features = []
 
-    for column in train_data.dtypes:
+    drop_columns = ["customer_id", "event_dttm", "story_id", "event"]
+
+    for column in train_data.dtypes.keys():
         typ = str(train_data.dtypes[column])
-        if "int" in typ or "float" in typ or "bool" in typ:
+        if "int" in typ or "float" in typ or "bool" in typ or column in drop_columns:
             continue
 
         cat_features.append(column)
@@ -79,7 +81,7 @@ def run_train_model(config: ConfigBase):
     target = [config.class_to_int[targ] for targ in train_data["event"]]
     time = train_data["event_dttm"]
 
-    train_data.drop(columns=["customer_id", "event_dttm", "story_id", "event"], inplace=True)
+    train_data.drop(columns=drop_columns, inplace=True)
 
     model.fit(train_data, target)
 
