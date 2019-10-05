@@ -54,7 +54,7 @@ class Config(ConfigBase):
             FeatureExtractorDescriptionsFromModel('stories_desc.csv'),
             FeatureExtractorDuplicatedReaction(),
             FeatureExtractorStaticDescriptions(self),
-            FeatureExtractorDescriptionsFelix("felix_descriptions.csv")
+            FeatureExtractorDescriptionsFelix("felix_features.csv")
         ])
 
         model = lambda : CatBoostClassifier(

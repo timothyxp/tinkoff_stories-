@@ -12,6 +12,7 @@ from lightgbm import LGBMClassifier
 from itertools import product
 from pipeline.metrics.custom_tinkoff import tinkoff_custom
 from catboost import CatBoostClassifier
+import json
 
 
 
@@ -55,7 +56,30 @@ def run_train(config: ConfigBase):
 def run_train_model(config: ConfigBase):
     train_data = pd.read_csv(config.train_data_path)
 
-    model = config.model()
+    cat_features = []
+
+    drop_columns = ["customer_id", "event_dttm", "story_id", "event"]
+
+    for column in train_data.dtypes.keys():
+        typ = str(train_data.dtypes[column])
+        if "int" in typ or "float" in typ or "bool" in typ or column in drop_columns:
+            continue
+
+        logger.debug(f"cat column {column}")
+        cat_features.append(column)
+        train_data[column] = train_data[column].astype(str)
+
+    logger.debug(f"have {repr(cat_features)} columns")
+    with open("cat_festures.json", "w") as f:
+        f.write(json.dumps(cat_features))
+
+    model = CatBoostClassifier(
+        learning_rate=0.07,
+        max_depth=2,
+        iterations=70,
+        thread_count=8,
+        cat_features=cat_features
+    )
 
     logger.info("start fitting model")
 
@@ -64,7 +88,7 @@ def run_train_model(config: ConfigBase):
     target = [config.class_to_int[targ] for targ in train_data["event"]]
     time = train_data["event_dttm"]
 
-    train_data.drop(columns=["customer_id", "event_dttm", "story_id", "event"], inplace=True)
+    train_data.drop(columns=drop_columns, inplace=True)
 
     model.fit(train_data, target)
 
@@ -76,6 +100,7 @@ def run_train_model(config: ConfigBase):
 
 
 def run_grid_search(config: ConfigBase):
+
     transactions = pd.read_csv(config.transactions_path)
     users = pd.read_csv(config.customer_path)
     train_data = pd.read_csv(config.stories_path)
@@ -217,7 +242,13 @@ def build_inference_data(config):
 def run_predict(config: ConfigBase):
     logger.info("read inference data")
 
-    inference_data = pd.read_csv(config.inference_data)
+    inference_data = pd.read_csv(config.inference_data, low_memory=False)
+
+    with open("cat_festures.json", "r") as f:
+        cat_features = json.loads(f.read())
+
+    for column in cat_features:
+        inference_data[column] = inference_data[column].astype(str)
 
     logger.info(f"inference data shape {inference_data.shape}")
 
