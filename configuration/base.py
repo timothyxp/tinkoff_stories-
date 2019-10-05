@@ -54,14 +54,8 @@ class Config(ConfigBase):
         ])
 
         model = lambda : CatBoostClassifier(
-            class_weights={
-                0: 0.2,
-                1: 0.1,
-                2: 0.1,
-                3: 0.3
-            },
             learning_rate=0.07,
-            depth=2,
+            max_depth=2,
             iterations=70,
             thread_count=8
         )
