@@ -54,7 +54,7 @@ def run_train(config: ConfigBase):
 
 
 def run_train_model(config: ConfigBase):
-    train_data = pd.read_csv(config.train_data_path)
+    train_data = pd.read_csv(config.train_data_path, low_memory=False)
 
     cat_features = []
 
@@ -74,9 +74,9 @@ def run_train_model(config: ConfigBase):
         f.write(json.dumps(cat_features))
 
     model = CatBoostClassifier(
-        learning_rate=0.07,
-        max_depth=2,
-        iterations=70,
+        learning_rate=0.09,
+        max_depth=5,
+        iterations=90,
         thread_count=8,
         cat_features=cat_features
     )
@@ -115,9 +115,9 @@ def run_grid_search(config: ConfigBase):
 
     #train_data.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
 
-    n_estimators = [50, 70, 90]
-    learning_rate = [0.05, 0.07, 0.09]
-    num_leaves = [3,4,5]
+    n_estimators = [90, 120, 150]
+    learning_rate = [0.09, 0.12, 0.15]
+    num_leaves = [4,5,6]
 
     class_weight_0 = [0.2]
     class_weight_1 = [0.1]
