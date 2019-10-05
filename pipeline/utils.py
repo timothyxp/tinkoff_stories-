@@ -86,7 +86,7 @@ def run_grid_search(config: ConfigBase):
 
     n_estimators = [50, 70, 90]
     learning_rate = [0.05, 0.07, 0.09]
-    num_leaves = [15, 23, 31]
+    num_leaves = [3,4,5]
 
     class_weight_0 = [0.2]
     class_weight_1 = [0.1]
@@ -137,7 +137,7 @@ def run_grid_search(config: ConfigBase):
 
         predctions = model.predict(X_test)
 
-        predictions = [config.score_mapper[pred] for pred in predctions]
+        predictions = [config.score_mapper[pred[0]] for pred in predctions]
 
         metric = tinkoff_custom(predictions, Y_test)
 
