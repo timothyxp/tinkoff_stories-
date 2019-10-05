@@ -16,7 +16,8 @@ from pipeline.feature_extractors.time_features import FeatureExtractorDayCategor
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
     FeatureExtractorCustomerJobPositionClassify, FeatureExtractorCustomerJobTitleTransactionMean
-from pipeline.feature_extractors.descriptions import FeatureExtractorStaticDescriptions, FeatureExtractorDescriptionsFromModel
+from pipeline.feature_extractors.descriptions import FeatureExtractorStaticDescriptions, \
+    FeatureExtractorDescriptionsFromModel, FeatureExtractorDescriptionsFelix
 import lightgbm
 from pipeline.collaborative_models.als import ALS
 from catboost import CatBoostClassifier
@@ -50,7 +51,8 @@ class Config(ConfigBase):
             FeatureExtractorCustomerJobTitleTransactionMean(),
             FeatureExtractorDescriptionsFromModel('stories_desc.csv'),
             FeatureExtractorDuplicatedReaction(),
-            FeatureExtractorStaticDescriptions(self)
+            FeatureExtractorStaticDescriptions(self),
+            FeatureExtractorDescriptionsFelix("felix_descriptions.csv")
         ])
 
         model = lambda : CatBoostClassifier(
