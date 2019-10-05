@@ -59,7 +59,7 @@ class FeatureExtractorMeanLikeValueForStory(FeatureExtractorBase):
         return candidates.merge(stories_event_int, how='left', on='story_id')
 
 
-class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
+class FeatureExractorUserStoriesReactionsAmount(FeatureExtractorBase):
     def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
         stories_reaction: pd.DataFrame = stories \
             [["customer_id", "event"]] \
@@ -71,9 +71,25 @@ class FeatureExractorOntHotEncodingStories(FeatureExtractorBase):
             "like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
         })
 
-        print(stories_reaction.columns)
-
         candidates = candidates \
             .merge(stories_reaction, on="customer_id", how="left")
+
+        return candidates
+
+
+class FeatureExtractorStoriesReactionsAmount(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories_reaction: pd.DataFrame = stories \
+            [["story_id", "event"]] \
+            .groupby("story_id") \
+            .event.agg({
+            "story_dislike_amount": lambda x: len(list(filter(lambda y: y == "dislike", x))),
+            "story_skip_amount": lambda x: len(list(filter(lambda y: y == "skip", x))),
+            "story_view_amount": lambda x: len(list(filter(lambda y: y == "view", x))),
+            "story_like_amount": lambda x: len(list(filter(lambda y: y == "like", x)))
+        })
+
+        candidates = candidates \
+            .merge(stories_reaction, on="story_id", how="left")
 
         return candidates
