@@ -6,3 +6,4 @@ scikit-learn
 pyspark
 lightgbm
 colour
+catboost

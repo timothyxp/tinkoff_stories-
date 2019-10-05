@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 from lightgbm import LGBMClassifier
 from itertools import product
 from pipeline.metrics.custom_tinkoff import tinkoff_custom
+from catboost import CatBoostClassifier
 
 
 
@@ -123,17 +124,17 @@ def run_grid_search(config: ConfigBase):
                     f"cw_2={cw2}, "
                     f"cw_3={cw3}"
                     )
-        model = LGBMClassifier(
+        model = CatBoostClassifier(
             n_estimators=n_estimator,
             learning_rate=lr,
             num_leaves=num_leave,
-            class_weight={
+            class_weights={
                 0: cw0,
                 1: cw1,
                 2: cw2,
                 3: cw3
             },
-            n_jobs=8
+            thread_count=8
         )
 
         logger.debug("fitting")

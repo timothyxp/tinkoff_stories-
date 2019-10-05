@@ -19,6 +19,7 @@ from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJob
 from pipeline.feature_extractors.descriptions import FeatureExtractorStaticDescriptions, FeatureExtractorDescriptionsFromModel
 import lightgbm
 from pipeline.collaborative_models.als import ALS
+from catboost import CatBoostClassifier
 
 
 class Config(ConfigBase):
@@ -52,8 +53,8 @@ class Config(ConfigBase):
             FeatureExtractorStaticDescriptions(self)
         ])
 
-        model = lambda : lightgbm.LGBMClassifier(
-            class_weight={
+        model = lambda : CatBoostClassifier(
+            class_weights={
                 0: 0.2,
                 1: 0.1,
                 2: 0.1,
@@ -62,7 +63,7 @@ class Config(ConfigBase):
             learning_rate=0.07,
             num_leaves=23,
             n_estimators=70,
-            n_jobs=8
+            thread_count=8
         )
 
         collaborative_model = lambda : ALS()
