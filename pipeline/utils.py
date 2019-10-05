@@ -223,6 +223,8 @@ def run_predict(config: ConfigBase):
     prediction = model.predict(inference_data)
 
     logger.info(f"prediction len = {len(prediction)}")
+    prediction = [pred[0] for pred in prediction]
+
     logger.info(f"predictions counts: {Counter(prediction).most_common(4)}")
 
     score_mapper = config.score_mapper
