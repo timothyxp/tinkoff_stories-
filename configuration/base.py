@@ -2,7 +2,8 @@ from pipeline.config_base import ConfigBase
 from pipeline.beautifier.beautifier import DataBeautifier
 from pipeline.feature_extractors.base import FeatureExtractorCombiner
 from pipeline.feature_extractors.als import FeatureExtractorALS
-from pipeline.feature_extractors.age_features import FeatureExtractorAgeCategoryAndAge
+from pipeline.feature_extractors.age_features import FeatureExtractorAgeCategoryAndAge, \
+    FeatureExtractorCountForEachCategory
 from pipeline.feature_extractors.gender_features import FeatureExtractorCustomerGender
 from pipeline.feature_extractors.childer_features import FeatureExtractorCustomerChildrenAmount
 from pipeline.feature_extractors.transactions_features import FeatureExtractorAvgTransactionAmt, \
@@ -28,6 +29,7 @@ class Config(ConfigBase):
         data_beautifier = DataBeautifier(self)
 
         feature_extractor = FeatureExtractorCombiner([
+            FeatureExtractorCountForEachCategory(),
             FeatureExtractorALS(self),
             FeatureExtractorCustomerChildrenAmount(),
             FeatureExtractorCustomerJobCategory(),
