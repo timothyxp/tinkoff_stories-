@@ -64,7 +64,9 @@ def run_train_model(config: ConfigBase):
         if "int" in typ or "float" in typ or "bool" in typ or column in drop_columns:
             continue
 
+        logger.debug(f"cat column {column}")
         cat_features.append(column)
+        train_data[column] = train_data[column].astype(str)
 
     model = CatBoostClassifier(
         learning_rate=0.07,
