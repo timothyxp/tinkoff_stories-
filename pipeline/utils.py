@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 from lightgbm import LGBMClassifier
 from itertools import product
 from pipeline.metrics.custom_tinkoff import tinkoff_custom
+from catboost import CatBoostClassifier
 
 
 
@@ -77,20 +78,35 @@ def run_train_model(config: ConfigBase):
 def run_grid_search(config: ConfigBase):
     train_data = pd.read_csv(config.train_data_path)
 
+    train_data = train_data.sort_values(by="event_dttm")
+
     target = [config.class_to_int[targ] for targ in train_data["event"]]
 
     train_data.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
 
-    n_estimators = [25, 30, 35]
-    learning_rate = [0.02, 0.03, 0.04]
-    num_leaves = [4, 5, 6]
+    n_estimators = [50, 70, 90]
+    learning_rate = [0.05, 0.07, 0.09]
+    num_leaves = [3,4,5]
 
     class_weight_0 = [0.2]
     class_weight_1 = [0.1]
     class_weight_2 = [0.1]
     class_weight_3 = [0.3]
 
-    X_train, X_test, Y_train, Y_test = train_test_split(train_data, target)
+    all_shape = train_data.shape[0]
+
+    divider = 0.7
+
+    train_shape = int(all_shape * divider)
+
+    X_train = train_data[:train_shape]
+    X_test = train_data[train_shape:]
+
+    Y_train = target[:train_shape]
+    Y_test = target[train_shape:]
+
+    logger.info(f"train shape = {X_train.shape[0]}")
+    logger.info(f"test shape = {X_test.shape[0]}")
 
     hyper_parameters = product(n_estimators, learning_rate, num_leaves,
                                class_weight_0, class_weight_1, class_weight_2, class_weight_3)
@@ -108,17 +124,12 @@ def run_grid_search(config: ConfigBase):
                     f"cw_2={cw2}, "
                     f"cw_3={cw3}"
                     )
-        model = LGBMClassifier(
-            n_estimators=n_estimator,
+        model = CatBoostClassifier(
+            iterations=n_estimator,
+            max_depth=num_leave,
             learning_rate=lr,
-            num_leaves=num_leave,
-            class_weight={
-                0: cw0,
-                1: cw1,
-                2: cw2,
-                3: cw3
-            },
-            n_jobs=8
+            thread_count=8,
+            verbose=0
         )
 
         logger.debug("fitting")
@@ -126,9 +137,9 @@ def run_grid_search(config: ConfigBase):
 
         predctions = model.predict(X_test)
 
-        predictions = [config.score_mapper[pred] for pred in predctions]
+        predictions = [config.score_mapper[pred[0]] for pred in predctions]
 
-        metric = tinkoff_custom(predictions, target)
+        metric = tinkoff_custom(predictions, Y_test)
 
         logger.debug(f"have metric {metric}")
 
@@ -212,6 +223,8 @@ def run_predict(config: ConfigBase):
     prediction = model.predict(inference_data)
 
     logger.info(f"prediction len = {len(prediction)}")
+    prediction = [pred[0] for pred in prediction]
+
     logger.info(f"predictions counts: {Counter(prediction).most_common(4)}")
 
     score_mapper = config.score_mapper
