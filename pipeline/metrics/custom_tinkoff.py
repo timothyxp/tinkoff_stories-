@@ -8,9 +8,9 @@ def tinkoff_custom(prediction, target):
         3: 0.5
     }
 
-    weights = [weight_event[event] for event in prediction]
+    weights = [weight_event[event] for event in target]
 
-    answer = sum([weight * targ for weight, targ in zip(weights, target)])
+    answer = sum([weight * targ for weight, targ in zip(weights, prediction)])
 
     best_weight = {
         0: -1,

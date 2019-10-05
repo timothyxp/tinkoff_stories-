@@ -28,7 +28,7 @@ class FeatureExtractorStaticDescriptions(FeatureExtractorBase):
         return candidates
 
 
-class FeatureExtractorStaticDescriptions(FeatureExtractorBase):
+class FeatureExtractorDescriptionsFromModel(FeatureExtractorBase):
     def __init__(self, path):
         self.path = path
 
