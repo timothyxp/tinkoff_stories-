@@ -77,20 +77,35 @@ def run_train_model(config: ConfigBase):
 def run_grid_search(config: ConfigBase):
     train_data = pd.read_csv(config.train_data_path)
 
+    train_data = train_data.sort_values(by="event_dttm")
+
     target = [config.class_to_int[targ] for targ in train_data["event"]]
 
     train_data.drop(columns=["event", "customer_id", "story_id", "event_dttm"], inplace=True)
 
-    n_estimators = [30, 50, 70]
-    learning_rate = [0.03, 0.05, 0.07]
-    num_leaves = [7, 15, 23]
+    n_estimators = [50, 70, 90]
+    learning_rate = [0.05, 0.07, 0.09]
+    num_leaves = [15, 23, 31]
 
     class_weight_0 = [0.2]
     class_weight_1 = [0.1]
     class_weight_2 = [0.1]
     class_weight_3 = [0.3]
 
-    X_train, X_test, Y_train, Y_test = train_test_split(train_data, target)
+    all_shape = train_data.shape[0]
+
+    divider = 0.7
+
+    train_shape = all_shape * divider
+
+    X_train = train_data[:train_shape]
+    X_test = train_data[train_shape:]
+
+    Y_train = target[:train_shape]
+    Y_test = target[train_shape:]
+
+    logger.info(f"train shape = {X_train.shape[0]}")
+    logger.info(f"test shape = {X_test.shape[0]}")
 
     hyper_parameters = product(n_estimators, learning_rate, num_leaves,
                                class_weight_0, class_weight_1, class_weight_2, class_weight_3)
