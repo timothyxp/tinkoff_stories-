@@ -57,3 +57,37 @@ class FeatureExtractorTransactionInWeek(FeatureExtractorBase):
         candidates = candidates.merge(transactions_in_week, on=['event_week'], how='left')
         candidates
         return candidates
+
+
+class FeatureExtractorLikeInWeekDay(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories['event_dttm'] = pd.to_datetime(stories['event_dttm'])
+        stories['event_wday'] = stories['event_dttm'].apply(lambda x: x.weekday())
+        events_list = ['like', 'view', 'skip', 'dislike']
+        stories_in_day = stories.drop_duplicates(['event_wday']).reset_index(drop=True)
+        for event in events_list:
+            stories_in_day_x = stories[stories['event'] == event].groupby(
+                ['event_wday']).apply(len).reset_index()
+            stories_in_day = stories_in_day.merge(stories_in_day_x, on=['event_wday'], how='left')
+            stories_in_day = stories_in_day.rename(columns={stories_in_day_x.columns[1]: event})
+        candidates['event_dttm'] = pd.to_datetime(candidates['event_dttm'])
+        candidates['event_wday'] = candidates['event_dttm'].apply(lambda x: x.weekday())
+        candidates = candidates.merge(stories_in_day, on=['event_wday'], how='left')
+        return candidates[['story_id', 'like', 'view', 'skip', 'dislike']]
+
+
+class FeatureExtractorLikeInWeek(FeatureExtractorBase):
+    def extract(self, transactions: pd.DataFrame, stories: pd.DataFrame, users: pd.DataFrame, candidates: pd.DataFrame) -> pd.DataFrame:
+        stories['event_dttm'] = pd.to_datetime(stories['event_dttm'])
+        stories['event_week'] = stories['event_dttm'].apply(lambda x: x.isocalendar()[1])
+        events_list = ['like', 'view', 'skip', 'dislike']
+        stories_in_week = stories.drop_duplicates(['event_week']).reset_index(drop=True)
+        for event in events_list:
+            stories_in_week_x = stories[stories['event'] == event].groupby(
+                ['event_week']).apply(len).reset_index()
+            stories_in_week = stories_in_week.merge(stories_in_week_x, on=['event_wday'], how='left')
+            stories_in_week = stories_in_week.rename(columns={stories_in_week_x.columns[1]: event})
+        candidates['event_dttm'] = pd.to_datetime(candidates['event_dttm'])
+        candidates['event_week'] = candidates['event_dttm'].apply(lambda x: x.isocalendar()[1])
+        candidates = candidates.merge(stories_in_week, on=['event_week'], how='left')
+        return candidates[['story_id', 'like', 'view', 'skip', 'dislike']]

@@ -14,7 +14,8 @@ from pipeline.feature_extractors.stories_reaction_features import FeatureExtract
     FeatureExtractorMeanLikeValueForStory, FeatureExtractorStoriesReactionsAmount, \
     FeatureExractorUserStoriesReactionsAmount, FeatureExtractorDuplicatedReaction
 from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory, \
-    FeatureExtractorTransactionInWeek, FeatureExtractorTransactionInWeekDay
+    FeatureExtractorTransactionInWeek, FeatureExtractorTransactionInWeekDay, \
+    FeatureExtractorLikeInWeekDay, FeatureExtractorLikeInWeek
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
     FeatureExtractorCustomerJobPositionClassify, FeatureExtractorCustomerJobTitleTransactionMean
@@ -52,7 +53,9 @@ class Config(ConfigBase):
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
-            FeatureExtractorTransactionInWeekDay,
+            FeatureExtractorTransactionInWeekDay(),
+            FeatureExtractorLikeInWeekDay(),
+            FeatureExtractorLikeInWeek(),
             FeatureExtractorDescriptionsFromModel('stories_desc.csv'),
             FeatureExtractorDuplicatedReaction(),
             FeatureExtractorTransactionInWeek(),
