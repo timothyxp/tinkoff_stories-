@@ -13,7 +13,8 @@ from pipeline.feature_extractors.transactions_features import FeatureExtractorAv
 from pipeline.feature_extractors.stories_reaction_features import FeatureExtractorMeanLikeValueForCustomer,  \
     FeatureExtractorMeanLikeValueForStory, FeatureExtractorStoriesReactionsAmount, \
     FeatureExractorUserStoriesReactionsAmount, FeatureExtractorDuplicatedReaction
-from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory
+from pipeline.feature_extractors.time_features import FeatureExtractorDayCategory, FeatureExtractorHourCategory, \
+    FeatureExtractorTransactionInWeek, FeatureExtractorTransactionInWeekDay
 from pipeline.feature_extractors.marital_features import FeatureExtractorCustomerMaritalCategories
 from pipeline.feature_extractors.job_category import FeatureExtractorCustomerJobCategory, \
     FeatureExtractorCustomerJobPositionClassify, FeatureExtractorCustomerJobTitleTransactionMean
@@ -51,8 +52,11 @@ class Config(ConfigBase):
             FeatureExtractorCustomerMaritalCategories(),
             FeatureExtractorCustomerJobPositionClassify(),
             FeatureExtractorCustomerJobTitleTransactionMean(),
+            FeatureExtractorTransactionInWeekDay,
             FeatureExtractorDescriptionsFromModel('stories_desc.csv'),
             FeatureExtractorDuplicatedReaction(),
+            FeatureExtractorTransactionInWeek(),
+
             FeatureExtractorStaticDescriptions(self),
             FeatureExtractorDescriptionsFelix("felix_features.csv")
         ])
@@ -62,6 +66,7 @@ class Config(ConfigBase):
             max_depth=2,
             iterations=70,
             thread_count=8
+
         )
 
         collaborative_model = lambda : ALS()
